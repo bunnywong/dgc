@@ -14,7 +14,7 @@ if ( ! function_exists( 'newswire_setup' ) ):
  * Sets up theme defaults and registers support for various WordPress features.
  */
 function newswire_setup() {
-		
+
 	/**
 	 * Make theme available for translation
 	 * Translations can be filed in the /languages/ directory
@@ -34,11 +34,11 @@ function newswire_setup() {
 		'primary-nav' => __( 'Main Navigation Menu', 'newswire' ),
 	) );
 
-	add_theme_support('post-thumbnails'); 
+	add_theme_support('post-thumbnails');
 	// This theme styles the visual editor with editor-style.css to match the theme style.
 	add_editor_style();
-	
-	
+
+
 	// custom backgrounds
 	$newswire_custom_background = array(
 		// Background color default
@@ -49,10 +49,10 @@ function newswire_setup() {
 	);
 	add_theme_support('custom-background', $newswire_custom_background );
 
-	
+
 	// adding post format support
-	add_theme_support( 'post-formats', 
-		array( 
+	add_theme_support( 'post-formats',
+		array(
 			'aside', /* Typically styled without a title. Similar to a Facebook note update */
 			'gallery', /* A gallery of images. Post will likely contain a gallery shortcode and will have image attachments */
 			'link', /* A link to another site. Themes may wish to use the first <a href=ÓÓ> tag in the post content as the external link for that post. An alternative approach could be if the post consists only of a URL, then that will be the URL and the title (post_title) will be the name attached to the anchor for it */
@@ -82,18 +82,18 @@ add_action( 'after_setup_theme', 'newswire_content_width' );
 
 
 /**
- * Title filter 
+ * Title filter
  */
 if ( ! function_exists( 'newswire_filter_wp_title' ) ) :
 	function newswire_filter_wp_title( $old_title, $sep, $sep_location ) {
-		
+
 		if ( is_feed() ) return $old_title;
-	
+
 		$site_name = get_bloginfo( 'name' );
 		$site_description = get_bloginfo( 'description' );
 		// add padding to the sep
 		$ssep = ' ' . $sep . ' ';
-		
+
 		if ( $site_description && ( is_home() || is_front_page() ) ) {
 			return $site_name . ' | ' . $site_description;
 		} else {
@@ -103,23 +103,23 @@ if ( ! function_exists( 'newswire_filter_wp_title' ) ) :
 			elseif( is_author() ) $insert = $ssep . __( 'Author', 'newswire' );
 			elseif( is_year() || is_month() || is_day() ) $insert = $ssep . __( 'Archives', 'newswire' );
 			else $insert = NULL;
-			 
+
 			// get the page number we're on (index)
 			if( get_query_var( 'paged' ) )
 			$num = $ssep . __( 'Page ', 'newswire' ) . get_query_var( 'paged' );
-			 
+
 			// get the page number we're on (multipage post)
 			elseif( get_query_var( 'page' ) )
 			$num = $ssep . __( 'Page ', 'newswire' ) . get_query_var( 'page' );
-			 
+
 			// else
 			else $num = NULL;
-			 
+
 			// concoct and return new title
 			return $site_name . $insert . $old_title . $num;
-			
+
 		}
-	
+
 	}
 endif;
 // call our custom wp_title filter, with normal (10) priority, and 3 args
@@ -127,215 +127,215 @@ add_filter( 'wp_title', 'newswire_filter_wp_title', 10, 3 );
 
 
 /*******************************************************************
-* These are settings for the Theme Customizer in the admin panel. 
+* These are settings for the Theme Customizer in the admin panel.
 *******************************************************************/
 if ( ! function_exists( 'newswire_theme_customizer' ) ) :
 	function newswire_theme_customizer( $wp_customize ) {
-		
+
 		$wp_customize->remove_section( 'title_tagline');
 
-		
+
 		/* logo option */
 		$wp_customize->add_section( 'newswire_logo_section' , array(
 			'title'       => __( 'Site Logo', 'newswire' ),
 			'priority'    => 31,
 			'description' => __( 'Upload a logo to replace the default site name in the header', 'newswire' ),
 		) );
-		
+
 		$wp_customize->add_setting( 'newswire_logo', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'newswire_logo', array(
 			'label'    => __( 'Choose your logo (ideal width is 100-300px and ideal height is 40-100px)', 'newswire' ),
 			'section'  => 'newswire_logo_section',
 			'settings' => 'newswire_logo',
 		) ) );
-		
-		
+
+
 		/* color scheme option */
 		$wp_customize->add_setting( 'newswire_site_title_color_settings', array (
 			'default'	=> '#222222',
 			'sanitize_callback' => 'sanitize_hex_color',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'newswire_site_title_color_settings', array(
 			'label'    => __( 'Site Title Color', 'newswire' ),
 			'section'  => 'colors',
 			'settings' => 'newswire_site_title_color_settings',
 			'priority'    => 101,
 		) ) );
-		
-		
+
+
 		$wp_customize->add_setting( 'newswire_color_settings', array (
 			'default'	=> '#dd3333',
 			'sanitize_callback' => 'sanitize_hex_color',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'newswire_color_settings', array(
 			'label'    => __( 'Theme Color Scheme', 'newswire' ),
 			'section'  => 'colors',
 			'settings' => 'newswire_color_settings',
 			'priority'    => 102,
 		) ) );
-		
-		
+
+
 		$wp_customize->add_setting( 'newswire_nav_color_settings', array (
 			'default'	=> '#222222',
 			'sanitize_callback' => 'sanitize_hex_color',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'newswire_nav_color_settings', array(
 			'label'    => __( 'Navigation Bar Background Color', 'newswire' ),
 			'section'  => 'colors',
 			'settings' => 'newswire_nav_color_settings',
 			'priority'    => 103,
 		) ) );
-		
-		
+
+
 		/* social media option */
 		$wp_customize->add_section( 'newswire_social_section' , array(
 			'title'       => __( 'Social Media Icons', 'newswire' ),
 			'priority'    => 33,
 			'description' => __( 'Optional social media buttons in the header', 'newswire' ),
 		) );
-		
+
 		$wp_customize->add_setting( 'newswire_facebook', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_facebook', array(
 			'label'    => __( 'Enter your Facebook url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_facebook',
 			'priority'    => 101,
 		) ) );
-	
+
 		$wp_customize->add_setting( 'newswire_twitter', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_twitter', array(
 			'label'    => __( 'Enter your Twitter url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_twitter',
 			'priority'    => 102,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_google', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_google', array(
 			'label'    => __( 'Enter your Google+ url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_google',
 			'priority'    => 103,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_pinterest', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_pinterest', array(
 			'label'    => __( 'Enter your Pinterest url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_pinterest',
 			'priority'    => 104,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_linkedin', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_linkedin', array(
 			'label'    => __( 'Enter your Linkedin url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_linkedin',
 			'priority'    => 105,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_youtube', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_youtube', array(
 			'label'    => __( 'Enter your Youtube url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_youtube',
 			'priority'    => 106,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_tumblr', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_tumblr', array(
 			'label'    => __( 'Enter your Tumblr url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_tumblr',
 			'priority'    => 107,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_instagram', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_instagram', array(
 			'label'    => __( 'Enter your Instagram url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_instagram',
 			'priority'    => 108,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_flickr', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_flickr', array(
 			'label'    => __( 'Enter your Flickr url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_flickr',
 			'priority'    => 109,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_vimeo', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_vimeo', array(
 			'label'    => __( 'Enter your Vimeo url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_vimeo',
 			'priority'    => 110,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_yelp', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_yelp', array(
 			'label'    => __( 'Enter your Yelp url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_yelp',
 			'priority'    => 111,
 		) ) );
-			
+
 		$wp_customize->add_setting( 'newswire_rss', array (
 			'sanitize_callback' => 'esc_url_raw',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_rss', array(
 			'label'    => __( 'Enter your RSS url', 'newswire' ),
 			'section'  => 'newswire_social_section',
 			'settings' => 'newswire_rss',
 			'priority'    => 113,
 		) ) );
-		
+
 		$wp_customize->add_setting( 'newswire_email', array (
 			'sanitize_callback' => 'sanitize_email',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_email', array(
 			'label'    => __( 'Enter your email address', 'newswire' ),
 			'section'  => 'newswire_social_section',
@@ -343,21 +343,21 @@ if ( ! function_exists( 'newswire_theme_customizer' ) ) :
 			'priority'    => 114,
 		) ) );
 
-		
+
 		/* slider options */
-		
+
 		$wp_customize->add_section( 'newswire_slider_section' , array(
 			'title'       => __( 'Slider Options', 'newswire' ),
 			'priority'    => 33,
 			'description' => __( 'Adjust the behavior of the image slider.', 'newswire' ),
 		) );
-		
+
 		$wp_customize->add_setting( 'newswire_slider_effect', array(
 			'default' => 'scrollHorz',
 			'capability' => 'edit_theme_options',
 			'sanitize_callback' => 'sanitize_text_field',
 		));
-		
+
 		$wp_customize->add_control( 'effect_select_box', array(
 			'settings' => 'newswire_slider_effect',
 			'label' => __( 'Select Effect:', 'newswire' ),
@@ -371,31 +371,31 @@ if ( ! function_exists( 'newswire_theme_customizer' ) ) :
 				'shuffle' => 'Shuffle',
 			),
 		));
-		
+
 		$wp_customize->add_setting( 'newswire_slider_timeout', array(
 			'sanitize_callback' => 'newswire_sanitize_integer',
 		) );
-		
+
 		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'newswire_slider_timeout', array(
 			'label'    => __( 'Autoplay Speed in Seconds', 'newswire' ),
 			'section'  => 'newswire_slider_section',
 			'settings' => 'newswire_slider_timeout',
 		) ) );
-		
+
 		/* google font options */
-		
+
 		$wp_customize->add_section( 'newswire_fonts_section' , array(
 			'title'       => __( 'Fonts', 'newswire' ),
 			'priority'    => 34,
 			'description' => __( 'Choose Google fonts for Newswire', 'newswire' ),
 		) );
-		
+
 		$wp_customize->add_setting( 'newswire_site_title_font', array(
 			'default' => 'Varela',
 			'capability' => 'edit_theme_options',
 			'sanitize_callback' => 'sanitize_text_field',
 		));
-		
+
 		$wp_customize->add_control( 'title_font_select_box', array(
 			'settings' => 'newswire_site_title_font',
 			'label' => __( 'Site Title (Logo) Font:', 'newswire' ),
@@ -409,13 +409,13 @@ if ( ! function_exists( 'newswire_theme_customizer' ) ) :
 				'Vollkorn' => 'Vollkorn',
 			),
 		));
-		
+
 		$wp_customize->add_setting( 'newswire_nav_font', array(
 			'default' => 'Open Sans',
 			'capability' => 'edit_theme_options',
 			'sanitize_callback' => 'sanitize_text_field',
 		));
-		
+
 		$wp_customize->add_control( 'nav_font_select_box', array(
 			'settings' => 'newswire_nav_font',
 			'label' => __( 'Nav, Widget, Link Button, Footer:', 'newswire' ),
@@ -429,13 +429,13 @@ if ( ! function_exists( 'newswire_theme_customizer' ) ) :
 				'Vollkorn' => 'Vollkorn',
 			),
 		));
-		
+
 		$wp_customize->add_setting( 'newswire_head_font', array(
 			'default' => 'Varela',
 			'capability' => 'edit_theme_options',
 			'sanitize_callback' => 'sanitize_text_field',
 		));
-		
+
 		$wp_customize->add_control( 'head_font_select_box', array(
 			'settings' => 'newswire_head_font',
 			'label' => __( 'Headings, Post/Page Title', 'newswire' ),
@@ -449,13 +449,13 @@ if ( ! function_exists( 'newswire_theme_customizer' ) ) :
 				'Vollkorn' => 'Vollkorn',
 			),
 		));
-		
+
 		$wp_customize->add_setting( 'newswire_body_font', array(
 			'default' => 'Lucida Sans Unicode',
 			'capability' => 'edit_theme_options',
 			'sanitize_callback' => 'sanitize_text_field',
 		));
-		
+
 		$wp_customize->add_control( 'body_font_select_box', array(
 			'settings' => 'newswire_body_font',
 			'label' => __( 'Body Text', 'newswire' ),
@@ -493,22 +493,22 @@ if ( ! function_exists( 'newswire_apply_color' ) ) :
 	?>
 	<style id="newswire-color-settings">
 		<?php if ( get_theme_mod('newswire_color_settings') ) : ?>
-        a, a:visited, .entry-title a:hover, .post-content ol li:before, .post-content ul li:before, .colortxt { 
+        a, a:visited, .entry-title a:hover, .post-content ol li:before, .post-content ul li:before, .colortxt {
             color: <?php echo get_theme_mod('newswire_color_settings'); ?>;
         }
-        
+
         #search-box-wrap, #social-media a, #search-icon, nav[role=navigation] .menu > ul li a:hover, nav[role=navigation] .menu ul li.current-menu-item a, .nav ul li.current_page_item a, nav[role=navigation] .menu ul li.current_page_item a, .cat-meta-color, .colorbar, .pagination li a:hover, .pagination li.active a, #comment-nav-above a, #comment-nav-below a, #nav-above a:hover, #nav-below a:hover, #image-navigation a:hover, #sidebar .widget-title,  .commentlist .comment-reply-link, .commentlist .comment-reply-login, #respond #submit:hover {
             background-color: <?php echo get_theme_mod('newswire_color_settings'); ?>;
         }
-        
+
 		<?php endif; ?>
-		
+
 		<?php if ( get_theme_mod('newswire_site_title_color_settings') ) : ?>
 		#site-title a {
 			color: <?php echo get_theme_mod('newswire_site_title_color_settings'); ?>;
 		}
 		<?php endif; ?>
-		
+
 		<?php if ( get_theme_mod('newswire_nav_color_settings') ) : ?>
 		nav[role=navigation] div.menu {
 			background-color: <?php echo get_theme_mod('newswire_nav_color_settings'); ?>;
@@ -517,7 +517,7 @@ if ( ! function_exists( 'newswire_apply_color' ) ) :
     </style>
 	<?php
 	}
-	
+
 	if ( get_theme_mod('newswire_body_font') || get_theme_mod('newswire_site_title_font') || get_theme_mod('newswire_nav_font') || get_theme_mod('newswire_head_font') ) { ?>
 	<style id="newswire-font-settings">
 		<?php if ( get_theme_mod('newswire_body_font') ) : ?>
@@ -525,7 +525,7 @@ if ( ! function_exists( 'newswire_apply_color' ) ) :
 			font-family: "<?php echo get_theme_mod('newswire_body_font');  ?>", sans-serif;
 		}
 		<?php endif; ?>
-	
+
 		<?php if ( get_theme_mod('newswire_site_title_font') ) : ?>
 		#site-title {
 			font-family: "<?php echo get_theme_mod('newswire_site_title_font');  ?>", sans-serif;
@@ -534,13 +534,13 @@ if ( ! function_exists( 'newswire_apply_color' ) ) :
 			<?php endif; ?>
 		}
 		<?php endif; ?>
-		
+
 		<?php if ( get_theme_mod('newswire_nav_font') ) : ?>
 		#top-nav, nav[role=navigation] .menu > ul li a, nav[role=navigation] .menu > #menu-icon, .cat-meta-color, #sidebar .widget-title , footer[role=contentinfo], .commentlist .comment-reply-link, .commentlist .comment-reply-login, .comment-meta, #respond #submit {
 			font-family: "<?php echo get_theme_mod('newswire_nav_font');  ?>", sans-serif;
 		}
 		<?php endif; ?>
-		
+
 		<?php if ( get_theme_mod('newswire_head_font') ) : ?>
 		.entry-title, .page-header, .heading-latest, #comments-title, .commentlist .vcard, #reply-title, #respond label, .slides .slide-noimg, .slide-title {
 			font-family: "<?php echo get_theme_mod('newswire_head_font');  ?>", sans-serif;
@@ -563,8 +563,8 @@ add_action( 'wp_head', 'newswire_apply_color' );
 if ( ! function_exists( 'newswire_main_nav' ) ) :
 function newswire_main_nav() {
 	// display the wp3 menu if available
-    wp_nav_menu( 
-    	array( 
+    wp_nav_menu(
+    	array(
     		'theme_location' => 'primary-nav', /* where in the theme it's assigned */
     		'container_class' => 'menu', /* container class */
     		'fallback_cb' => 'newswire_main_nav_fallback' /* menu fallback */
@@ -598,7 +598,7 @@ add_filter( 'wp_page_menu_args', 'newswire_page_menu_args' );
  * Register widgetized area and update sidebar with default widgets
  */
 function newswire_widgets_init() {
-	
+
 	register_sidebar( array(
 		'name' => __( 'Sidebar Home', 'newswire' ),
 		'id' => 'sidebar-home',
@@ -607,7 +607,7 @@ function newswire_widgets_init() {
 		'before_title' => '<div class="widget-title">',
 		'after_title' => '</div>',
 	) );
-	
+
 	register_sidebar( array(
 		'name' => __( 'Sidebar Main', 'newswire' ),
 		'id' => 'sidebar-main',
@@ -616,7 +616,7 @@ function newswire_widgets_init() {
 		'before_title' => '<div class="widget-title">',
 		'after_title' => '</div>',
 	) );
-	
+
 	register_sidebar( array(
 		'name' => __( 'Sidebar Posts', 'newswire' ),
 		'id' => 'sidebar-posts',
@@ -741,7 +741,7 @@ if ( ! function_exists( 'newswire_body_classes' ) ) :
 		if ( ! is_multi_author() ) {
 			$classes[] = 'single-author';
 		}
-	
+
 		return $classes;
 	}
 endif;
@@ -797,37 +797,37 @@ add_filter( 'use_default_gallery_style', '__return_false' );
  */
 if ( ! function_exists( 'newswire_pagination' ) ) :
 function newswire_pagination() {
-	
-		global $wp_query; 
-		
+
+		global $wp_query;
+
 		$big = 999999999;
-		  
-		$total_pages = $wp_query->max_num_pages;  
-		  
-		if ($total_pages > 1){  
-		  
-		  $wp_query->query_vars['paged'] > 1 ? $current_page = $wp_query->query_vars['paged'] : $current_page = 1;  
-			
-		  echo '<div class="pagination">';  
-			
-		  echo paginate_links(array(  
-			  'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ), 
-			  'format' => '/page/%#%',  
-			  'current' => $current_page,  
-			  'total' => $total_pages,  
-			  'prev_text' => __('&lsaquo; Prev', 'newswire'),  
-			  'next_text' => __('Next &rsaquo;', 'newswire')  
-			));  
-		  
-		  echo '</div>';  
-			
+
+		$total_pages = $wp_query->max_num_pages;
+
+		if ($total_pages > 1){
+
+		  $wp_query->query_vars['paged'] > 1 ? $current_page = $wp_query->query_vars['paged'] : $current_page = 1;
+
+		  echo '<div class="pagination">';
+
+		  echo paginate_links(array(
+			  'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+			  'format' => '/page/%#%',
+			  'current' => $current_page,
+			  'total' => $total_pages,
+			  'prev_text' => __('&lsaquo; Prev', 'newswire'),
+			  'next_text' => __('Next &rsaquo;', 'newswire')
+			));
+
+		  echo '</div>';
+
 		}
 }
 endif;
 
 
 /**
- * Add "Untitled" for posts without title, 
+ * Add "Untitled" for posts without title,
  */
 function newswire_post_title($title) {
 	if ($title == '') {
@@ -850,7 +850,7 @@ if ( ! function_exists( 'newswire_excerpt' ) ) :
 		$excerpt = implode(" ",$excerpt).'...';
 		} else {
 		$excerpt = implode(" ",$excerpt);
-		}	
+		}
 		$excerpt = preg_replace('`\[[^\]]*\]`','',$excerpt);
 		return $excerpt;
 	}
@@ -861,7 +861,7 @@ endif;
  */
 if ( ! function_exists( 'newswire_w3c_valid_rel' ) ) :
 	function newswire_w3c_valid_rel( $text ) {
-		$text = str_replace('rel="category tag"', 'rel="tag"', $text); return $text; 
+		$text = str_replace('rel="category tag"', 'rel="tag"', $text); return $text;
 	}
 endif;
 add_filter( 'the_category', 'newswire_w3c_valid_rel' );
@@ -879,14 +879,14 @@ add_filter('language_attributes', 'newswire_modernizr_addclass');
 if ( ! function_exists( 'newswire_modernizr_script' ) ) :
 	function newswire_modernizr_script() {
 		wp_enqueue_script( 'modernizr', get_template_directory_uri() . '/library/js/modernizr-2.6.2.min.js', false, '2.6.2');
-	}  
-endif;  
+	}
+endif;
 add_action('wp_enqueue_scripts', 'newswire_modernizr_script');
 
 /**
  * Ignore Sticky
  */
- 
+
 function newswire_ignore_sticky($query) {
 	if ( is_home() && $query->is_main_query() ) {
     	$query->set( 'ignore_sticky_posts', true );
@@ -910,5 +910,68 @@ if ( ! function_exists( 'newswire_custom_scripts' ) ) :
 	}
 endif;
 add_action('wp_enqueue_scripts', 'newswire_custom_scripts');
+
+
+/* Custom Fn.
+-------------------------------------------------- */
+add_shortcode('user_search','My_User_search');
+
+function My_User_search($atts = null){
+    $out = user_search_form();
+    if (isset($_GET['user_search']) && $_GET['user_search'] == "search_users" && isset($_GET['search_by'])){
+        global $wpdb;
+        $metakey = $_GET['search_by'];
+        $args = array('meta_key' => $metakey);
+         if (isset($_GET['s_value'])){
+            $metavalue = $_GET['s_value'];
+            $args['meta_value'] = $metavalue;
+         }
+
+        $search_users = get_users($args);
+        $out .= '<div>';
+        if (count($search_users) >0){
+
+            // here we loop over the users found and return whatever you want eg:
+            $out .= '<ul>';
+            foreach ($search_users as $user) {
+                $out .= '<li><a href="search-result-2?user_id='.$user->display_name.'" style="text-decoration: none;">' .substr($user->user_registered, 0, 10). ' ' .$user->display_name . '</a></li>';
+            }
+// vd($search_users);
+            $out .= '</ul>';
+        }else{
+            $out .= 'No users found, try searching for something else.';
+        }
+        $out .= '</div>';
+    }
+    return $out;
+}
+
+function user_search_form(){
+    $metavalue = $metakey = '';
+    if (isset($_GET['search_by'])){
+        $metakey = $_GET['search_by'];
+    }
+    if (isset($_GET['s_value'])){
+        $metavalue = $_GET['s_value'];
+    }
+    $re = '<div class="user_search"><form action="" name="user_s" method="get">
+       		 <label for="search_by">Search by:</label>
+            <select id="search_by" name="search_by">';
+    $re .= '	<option value="nickname">ID Number</option>';
+    $re .= '	<option value="last_name">Telephone</option>';
+    $re .= '</select>
+		        <label for="s_value"></label>
+		            <input id="s_value" name="s_value" type="text" value="'.$metavalue.'"/>
+		            <input name="user_search" id="user_search" type="hidden" value="search_users"/>
+		            <input id="submit" type="submit" value="Search" />
+		        </form></div>';
+    return $re;
+}
+
+function vd($var) {
+	echo '<pre>';
+	echo var_dump($var);
+	echo '</pre>';
+}
 
 ?>
