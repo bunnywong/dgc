@@ -34,9 +34,3 @@ get_header(); ?>
 
 <?php get_footer(); ?>
 
-<script>
-jQuery(document).ready(function($){
-
-	$('.mycred-my-balance-wrapper > div').prepend('My Balance: ')
-});
-</script>
