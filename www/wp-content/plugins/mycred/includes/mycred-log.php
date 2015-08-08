@@ -712,7 +712,6 @@ jQuery(function($) {
 					$output .= '<th scope="col" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
 				}
 			}
-
 			$output .= '
 	</tfoot>
 	<tbody id="the-list">';
@@ -723,14 +722,18 @@ jQuery(function($) {
 				foreach ( $this->results as $log_entry ) {
 					$row_class = apply_filters( 'mycred_log_row_classes', array( 'myCRED-log-row' ), $log_entry );
 
-					$alt = $alt+1;
-					if ( $alt % 2 == 0 )
-						$row_class[] = ' alt';
+					// Show my transaction only
+					if (get_current_user_id() == $log_entry->user_id) {
+						$alt = $alt+1;
+						if ( $alt % 2 == 0 )
+							$row_class[] = ' alt';
 
-					$output .= '<tr class="' . implode( ' ', $row_class ) . '">';
-					$output .= $this->get_the_entry( $log_entry );
-					$output .= '</tr>';
+						$output .= '<tr class="' . implode( ' ', $row_class ) . '">';
+						$output .= $this->get_the_entry( $log_entry );
+						$output .= '</tr>';
+					}
 				}
+
 			}
 			// No log entry
 			else {
@@ -807,13 +810,11 @@ jQuery(function($) {
 
 					break;
 				}
-				if (get_current_user_id() == $log_entry->user_id) { // Show my transaction only
-					if (strtolower($column_name) == 'entry') {
-						$entry_data .= '<' . $wrap . ' class="' . $column_id . '"></' . $wrap . '>';
-					} else {
-						$entry_data .= '<' . $wrap . ' class="' . $column_id . '">' . $content . '</' . $wrap . '>';
-					}
 
+				if (strtolower($column_name) == 'entry') {
+					$entry_data .= '<' . $wrap . ' class="' . $column_id . '"></' . $wrap . '>';
+				} else {
+					$entry_data .= '<' . $wrap . ' class="' . $column_id . '">' . $content . '</' . $wrap . '>';
 				}
 			}
 			return $entry_data;
