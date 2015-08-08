@@ -24,7 +24,4 @@ get_header(); ?>
 
 <?php get_footer(); ?>
 
-<script>
-</script>
-<style>
-</style>
+<script></script>

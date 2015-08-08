@@ -724,18 +724,14 @@ jQuery(function($) {
 					$row_class = apply_filters( 'mycred_log_row_classes', array( 'myCRED-log-row' ), $log_entry );
 
 					// Show my transaction only
-					if (get_current_user_id() == $log_entry->user_id) {
-						$alt = $alt+1;
-						if ( $alt % 2 == 0 )
-							$row_class[] = ' alt';
+					$alt = $alt+1;
+					if ( $alt % 2 == 0 )
+						$row_class[] = ' alt';
 
-						$str = '<tr class="' . implode( ' ', $row_class ) . '">';
-						$str .= $this->get_the_entry( $log_entry );
-						$str .= '</tr>';
-						$arr[] = $str;
-					}
+					$output .= '<tr class="' . implode( ' ', $row_class ) . '">';
+					$output .= $this->get_the_entry( $log_entry );
+					$output .= '</tr>';
 				}
-				krsort($arr);
 				$output .= implode('', $arr);
 			}
 			// No log entry

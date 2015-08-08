@@ -5,7 +5,7 @@ jQuery(document).ready(function($){
 	$('td.column-time').text(function() {
 		var str = $(this).text();
 		str = str.substring(0, str.length - 8);
-		return str;
+		// return str; // DEBUG
 	});
 
 	// Calc intest points
@@ -34,4 +34,19 @@ jQuery(document).ready(function($){
 		}
 	});
 
+	// Calc interest points
+	var result = '';
+	var pool = 0;
+	var a;
+// todo
+	$('.interest-points').each(function () {
+		pool = $(this).value().replace(/\s/g, '');
+		pool += 50;
+		console.log(pool);
+	});
+
+	// alert(pool);
+	alert(pool);
+
+	$("p:contains('My total interest points')" ).append(result)
 });
