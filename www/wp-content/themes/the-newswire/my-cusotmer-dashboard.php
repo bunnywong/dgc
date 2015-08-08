@@ -8,7 +8,6 @@ get_header(); ?>
     <div id="content" class="clearfix full-width-content">
 
         <div id="main" class="clearfix" role="main">
-todo: block client role to visit other user
 
 				<?php while ( have_posts() ) : the_post(); ?>
 

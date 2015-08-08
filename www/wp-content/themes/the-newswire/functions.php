@@ -967,11 +967,14 @@ function user_search_form(){
 		        </form></div>';
     return $re;
 }
+/*
+	--------------------------------------------------
+	Custom script
+	--------------------------------------------------
+ */
 
 function vd($var) {
 	echo '<pre>';
 	echo var_dump($var);
 	echo '</pre>';
 }
-
-?>
