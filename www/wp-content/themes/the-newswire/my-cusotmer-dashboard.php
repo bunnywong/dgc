@@ -35,5 +35,4 @@ jQuery(document).ready(function($){
 });
 </script>
 <style>
-	/* .column-entry {display: none;} */
 </style>

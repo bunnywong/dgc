@@ -718,6 +718,7 @@ jQuery(function($) {
 			// Loop
 			if ( $this->have_entries() ) {
 				$alt = 0;
+				$arr = array();
 
 				foreach ( $this->results as $log_entry ) {
 					$row_class = apply_filters( 'mycred_log_row_classes', array( 'myCRED-log-row' ), $log_entry );
@@ -728,12 +729,14 @@ jQuery(function($) {
 						if ( $alt % 2 == 0 )
 							$row_class[] = ' alt';
 
-						$output .= '<tr class="' . implode( ' ', $row_class ) . '">';
-						$output .= $this->get_the_entry( $log_entry );
-						$output .= '</tr>';
+						$str = '<tr class="' . implode( ' ', $row_class ) . '">';
+						$str .= $this->get_the_entry( $log_entry );
+						$str .= '</tr>';
+						$arr[] = $str;
 					}
 				}
-
+				krsort($arr);
+				$output .= implode('', $arr);
 			}
 			// No log entry
 			else {
