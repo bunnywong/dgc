@@ -693,7 +693,9 @@ jQuery(function($) {
 
 			// Table header
 			foreach ( $this->headers as $col_id => $col_title ) {
-				if(strtolower($col_title) != 'entry') {
+				if (strtolower($col_title) == 'entry') {
+					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">Interest Points</th>';
+				} else {
 					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
 				}
 			}
@@ -702,10 +704,11 @@ jQuery(function($) {
 		</tr>
 	</thead>
 	<tfoot>';
-
 			// Table footer
 			foreach ( $this->headers as $col_id => $col_title ) {
-				if(strtolower($col_title) != 'entry') {
+				if (strtolower($col_title) == 'entry') {
+					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">Interest Points</th>';
+				} else {
 					$output .= '<th scope="col" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
 				}
 			}
@@ -804,10 +807,17 @@ jQuery(function($) {
 
 					break;
 				}
-				if (strtolower($column_name) != 'entry' ) {
-					$entry_data .= '<' . $wrap . ' class="' . $column_id . '">' . $content . '</' . $wrap . '>';
+				if (get_current_user_id() == $log_entry->user_id) { // Show my transaction only
+					if (strtolower($column_name) == 'entry') {
+						$entry_data .= '<' . $wrap . ' class="' . $column_id . '"></' . $wrap . '>';
+					} else {
+						$entry_data .= '<' . $wrap . ' class="' . $column_id . '">' . $content . '</' . $wrap . '>';
+					}
+
 				}
+
 			}
+
 			return $entry_data;
 		}
 
