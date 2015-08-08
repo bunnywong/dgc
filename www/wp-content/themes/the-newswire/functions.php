@@ -8,6 +8,29 @@
  * For more information on hooks, actions, and filters, see http://codex.wordpress.org/Plugin_API.
  */
 
+/*
+	--------------------------------------------------
+	Custom script 1/2
+	--------------------------------------------------
+ */
+	function vd($var) {
+		echo '<pre>';
+		echo var_dump($var);
+		echo '</pre>';
+	}
+
+	if ( ! function_exists( 'my_custom_scripts' ) ) :
+		function my_custom_scripts() {
+			wp_register_script( 'cycle2_tile', get_template_directory_uri() . '/library/js/my-script.js' );
+		}
+	endif;
+	add_action('wp_enqueue_scripts', 'my_custom_scripts');
+
+/*
+	--------------------------------------------------
+	Default script
+	--------------------------------------------------
+ */
 
 if ( ! function_exists( 'newswire_setup' ) ):
 /**
@@ -966,15 +989,4 @@ function user_search_form(){
 		            <input id="submit" type="submit" value="Search" />
 		        </form></div>';
     return $re;
-}
-/*
-	--------------------------------------------------
-	Custom script
-	--------------------------------------------------
- */
-
-function vd($var) {
-	echo '<pre>';
-	echo var_dump($var);
-	echo '</pre>';
 }
