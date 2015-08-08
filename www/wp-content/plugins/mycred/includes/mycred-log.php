@@ -3,7 +3,7 @@ if ( ! defined( 'myCRED_VERSION' ) ) exit;
 
 /**
  * Query Log
- * @see http://codex.mycred.me/classes/mycred_query_log/ 
+ * @see http://codex.mycred.me/classes/mycred_query_log/
  * @since 0.1
  * @version 1.4.3
  */
@@ -16,9 +16,9 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 		public $num_rows;
 		public $max_num_pages;
 		public $total_rows;
-		
+
 		public $results;
-		
+
 		public $headers;
 		public $core;
 
@@ -64,7 +64,7 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 				'paged'    => $this->get_pagenum()
 			);
 			$this->args = wp_parse_args( $args, $defaults );
-			
+
 			// Difference between default and given args
 			$this->diff = array_diff_assoc( $this->args, $defaults );
 			if ( isset( $this->diff['number'] ) )
@@ -79,7 +79,7 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 					$data = get_transient( 'mycred_log_query_' . $cache_id );
 			}
 			if ( $data === false ) {
-				
+
 				// Type
 				$wheres[] = 'ctype = %s';
 				$prep[] = $this->args['ctype'];
@@ -270,7 +270,7 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 					$select = 'id';
 				else
 					$select = '*';
-				
+
 				$found_rows = '';
 				if ( $limits != '' )
 					$found_rows = 'SQL_CALC_FOUND_ROWS';
@@ -288,9 +288,9 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 				// Run
 				$this->request = $wpdb->prepare( "SELECT {$found_rows} {$select} FROM {$this->core->log_table} {$where} {$sortby} {$limits}", $prep );
 				$this->prep = $prep;
-				
+
 				$this->results = $wpdb->get_results( $this->request, $array ? ARRAY_A : OBJECT );
-				
+
 				if ( $limits != '' )
 					$this->num_rows = $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 				else
@@ -305,7 +305,7 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 					else
 						set_transient( 'mycred_log_query_' . $cache_id, $this->results, DAY_IN_SECONDS * 1 );
 				}
-				
+
 				$this->total_rows = $wpdb->get_var( "SELECT COUNT( * ) FROM {$this->core->log_table}" );
 			}
 
@@ -314,7 +314,7 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 				$this->request = 'transient';
 				$this->results = $data;
 				$this->prep = '';
-				
+
 				$this->num_rows = count( $data );
 			}
 
@@ -399,7 +399,7 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 		 */
 		public function get_pagenum() {
 			global $paged;
-			
+
 			if ( $paged > 0 )
 				$pagenum = absint( $paged );
 
@@ -606,7 +606,7 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 			// A difference in the default aguments should show us "search results"
 			if ( empty( $this->diff ) || ( ! empty( $this->diff ) && $this->max_num_pages < 2 ) )
 				unset( $exports['search'] );
-			
+
 			// Entire log export is not available when viewing our own history
 			if ( $is_profile )
 				unset( $exports['all'] ); ?>
@@ -775,7 +775,7 @@ jQuery(function($) {
 							$content = '<span>' . __( 'User Missing', 'mycred' ) . ' (ID: ' . $log_entry->user_id . ')</span>';
 						else
 							$content = '<span>' . $user->display_name . '</span>';
-						
+
 						$content = apply_filters( 'mycred_log_username', $content, $log_entry->user_id, $log_entry );
 
 					break;
@@ -815,9 +815,7 @@ jQuery(function($) {
 					}
 
 				}
-
 			}
-
 			return $entry_data;
 		}
 
@@ -926,7 +924,7 @@ jQuery(function($) {
 				echo '</ul>';
 			}
 		}
-		
+
 		/**
 		 * Reset Query
 		 * @since 1.3
@@ -939,9 +937,9 @@ jQuery(function($) {
 			$this->num_rows = NULL;
 			$this->max_num_pages = NULL;
 			$this->total_rows = NULL;
-		
+
 			$this->results = NULL;
-		
+
 			$this->headers = NULL;
 		}
 	}
