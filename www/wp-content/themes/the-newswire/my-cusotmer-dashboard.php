@@ -25,14 +25,6 @@ get_header(); ?>
 <?php get_footer(); ?>
 
 <script>
-jQuery(document).ready(function($){
-	$('td.column-time').text(function() {
-		var str = $(this).text();
-		str = str.substring(0, str.length - 8);
-		return str;
-	});
-
-});
 </script>
 <style>
 </style>

@@ -772,6 +772,7 @@ jQuery(function($) {
 
 			// Run though columns
 			foreach ( $this->headers as $column_id => $column_name ) {
+				$timestamp = '';
 				switch ( $column_id ) {
 					// Username Column
 					case 'column-username' :
@@ -789,6 +790,7 @@ jQuery(function($) {
 					case 'column-time' :
 
 						$content = $time = apply_filters( 'mycred_log_date', date_i18n( $date_format, $log_entry->time ), $log_entry->time, $log_entry );
+						$timestamp  = $log_entry->time;
 
 					break;
 					// Amount Column
@@ -814,10 +816,12 @@ jQuery(function($) {
 					break;
 				}
 
+				$timestamp == '' ? $data_time = '' : $data_time = 'data-timestamp="'.$timestamp.'"';
+
 				if (strtolower($column_name) == 'entry') {
-					$entry_data .= '<' . $wrap . ' class="' . $column_id . '"></' . $wrap . '>';
+					$entry_data .= '<' . $wrap . ' class="interest-points"></' . $wrap . '>';
 				} else {
-					$entry_data .= '<' . $wrap . ' class="' . $column_id . '">' . $content . '</' . $wrap . '>';
+					$entry_data .= '<' . $wrap . ' class="' . $column_id . '" '.$data_time.'>' . $content . '</' . $wrap . '>';
 				}
 			}
 			return $entry_data;
