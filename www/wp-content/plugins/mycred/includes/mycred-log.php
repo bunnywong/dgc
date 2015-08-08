@@ -693,7 +693,9 @@ jQuery(function($) {
 
 			// Table header
 			foreach ( $this->headers as $col_id => $col_title ) {
-				$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
+				if(strtolower($col_title) != 'entry') {
+					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
+				}
 			}
 
 			$output .= '
@@ -703,17 +705,18 @@ jQuery(function($) {
 
 			// Table footer
 			foreach ( $this->headers as $col_id => $col_title ) {
-				$output .= '<th scope="col" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
+				if(strtolower($col_title) != 'entry') {
+					$output .= '<th scope="col" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
+				}
 			}
 
 			$output .= '
 	</tfoot>
 	<tbody id="the-list">';
-
 			// Loop
 			if ( $this->have_entries() ) {
 				$alt = 0;
-				
+
 				foreach ( $this->results as $log_entry ) {
 					$row_class = apply_filters( 'mycred_log_row_classes', array( 'myCRED-log-row' ), $log_entry );
 
@@ -796,12 +799,14 @@ jQuery(function($) {
 					break;
 					// Let others play
 					default :
-					
+
 						$content = apply_filters( 'mycred_log_' . $column_id, '', $log_entry );
-					
+
 					break;
 				}
-				$entry_data .= '<' . $wrap . ' class="' . $column_id . '">' . $content . '</' . $wrap . '>';
+				if (strtolower($column_name) != 'entry' ) {
+					$entry_data .= '<' . $wrap . ' class="' . $column_id . '">' . $content . '</' . $wrap . '>';
+				}
 			}
 			return $entry_data;
 		}
