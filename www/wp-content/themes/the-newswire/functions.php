@@ -941,9 +941,9 @@ add_action('wp_enqueue_scripts', 'newswire_custom_scripts');
 
 /* Custom Fn.
 -------------------------------------------------- */
-add_shortcode('user_search','My_User_search');
+add_shortcode('user_search','my_user_search');
 
-function My_User_search($atts = null){
+function my_user_search($atts = null){
     $out = user_search_form();
     if (isset($_GET['user_search']) && $_GET['user_search'] == "search_users" && isset($_GET['search_by'])){
         global $wpdb;
@@ -957,13 +957,11 @@ function My_User_search($atts = null){
         $search_users = get_users($args);
         $out .= '<div>';
         if (count($search_users) >0){
-
             // here we loop over the users found and return whatever you want eg:
             $out .= '<ul>';
             foreach ($search_users as $user) {
-                $out .= '<li><a href="search-result-2?user_id='.$user->display_name.'" style="text-decoration: none;">' .substr($user->user_registered, 0, 10). ' ' .$user->display_name . '</a></li>';
+              $out .= '<li><a href="user-profile?user_id='.$user->ID.'" style="text-decoration: none;">' .$user->display_name .'</a></li>';
             }
-// vd($search_users);
             $out .= '</ul>';
         }else{
             $out .= 'No users found, try searching for something else.';
