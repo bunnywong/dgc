@@ -50,6 +50,7 @@ jQuery(document).ready(function($){
 	for (i=0; i < arr.length; i++) {
 		sum +=arr[i];
 	}
+	sum = Math.round(sum * 100) / 100;
 	var html = '<strong>' + sum + '</strong>';
 	$("p:contains('My total interest points')" ).append(html)
 });
