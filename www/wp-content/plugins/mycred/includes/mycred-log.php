@@ -703,19 +703,8 @@ jQuery(function($) {
 
 			$output .= '
 		</tr>
-	</thead>
-	<tfoot>';
-			// Table footer
-			foreach ( $this->headers as $col_id => $col_title ) {
-				$output .= '<th scope="col" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
-
-				// Append Interest points column
-				if (strtolower($col_title) == 'points') {
-					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">Interest Points</th>';
-				}
-			}
+	</thead>';
 			$output .= '
-	</tfoot>
 	<tbody id="the-list">';
 			// Loop
 			if ( $this->have_entries() ) {
