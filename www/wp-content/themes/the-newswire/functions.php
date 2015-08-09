@@ -10,7 +10,7 @@
 
 /*
 	--------------------------------------------------
-	Custom script
+	Custom script 1/2
 	--------------------------------------------------
  */
 	function vd($var) {
@@ -19,15 +19,13 @@
 		echo '</pre>';
 	}
 
-	// Import my custom script
+	// Import custom script
 	if ( ! function_exists( 'my_custom_scripts' ) ) :
 		function my_custom_scripts() {
 			wp_register_script( 'moment', get_template_directory_uri() . '/library/js/moment.js' );
-			wp_register_script( 'myScript', get_template_directory_uri() . '/js/js/my-script.js' );
-      wp_register_style( 'myStyle', get_template_directory_uri() . '/css/my-style.css' );
+			wp_register_script( 'myScript', get_template_directory_uri() . '/js/my-script.js?v='.time() );
 
 			wp_enqueue_script( 'newswire_custom_js', get_template_directory_uri() . '/library/js/scripts.js', array( 'moment', 'myScript' ), '1.0.0' );
-			 wp_enqueue_style( 'myStyle', '1.0.0' );
 		}
 	endif;
 	add_action('wp_enqueue_scripts', 'my_custom_scripts');
@@ -996,3 +994,19 @@ function user_search_form(){
 		        </form></div>';
     return $re;
 }
+
+/*
+	--------------------------------------------------
+	Custom script 1/2
+	--------------------------------------------------
+ */
+
+	// Import custom style
+	if ( ! function_exists( 'my_custom_style' ) ) :
+		function my_custom_style() {
+      wp_register_style( 'myStyle', get_template_directory_uri() . '/css/my-style.css?v='.time() );
+
+			 wp_enqueue_style( 'myStyle', '1.0.0' );
+		}
+	endif;
+	add_action('wp_enqueue_scripts', 'my_custom_style');

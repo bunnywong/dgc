@@ -693,10 +693,11 @@ jQuery(function($) {
 
 			// Table header
 			foreach ( $this->headers as $col_id => $col_title ) {
-				if (strtolower($col_title) == 'entry') {
+				$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
+
+				// Append Interest Points column
+				if (strtolower($col_title) == 'points') {
 					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">Interest Points</th>';
-				} else {
-					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
 				}
 			}
 
@@ -706,10 +707,11 @@ jQuery(function($) {
 	<tfoot>';
 			// Table footer
 			foreach ( $this->headers as $col_id => $col_title ) {
-				if (strtolower($col_title) == 'entry') {
+				$output .= '<th scope="col" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
+
+				// Append Interest points column
+				if (strtolower($col_title) == 'points') {
 					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">Interest Points</th>';
-				} else {
-					$output .= '<th scope="col" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
 				}
 			}
 			$output .= '
@@ -814,10 +816,11 @@ jQuery(function($) {
 
 				$timestamp == '' ? $data_time = '' : $data_time = 'data-timestamp="'.$timestamp.'"';
 
-				if (strtolower($column_name) == 'entry') {
+				$entry_data .= '<' . $wrap . ' class="' . $column_id . '" '.$data_time.'>' . $content . '</' . $wrap . '>';
+
+				// Append Interest Points column
+				if (strtolower($column_name) == 'points') {
 					$entry_data .= '<' . $wrap . ' class="interest-points"></' . $wrap . '>';
-				} else {
-					$entry_data .= '<' . $wrap . ' class="' . $column_id . '" '.$data_time.'>' . $content . '</' . $wrap . '>';
 				}
 			}
 			return $entry_data;

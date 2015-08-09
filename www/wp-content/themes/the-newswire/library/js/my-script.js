@@ -15,7 +15,6 @@ jQuery(document).ready(function($){
 		var self   = $(this);
 		var points = $(self).next('.column-creds').text();
 		points     = points.replace(/\s/g, ''); // Remove space
-
 		if (points != '') {
 			var timestamp       = $(self).data(timestamp).timestamp;
 			// timestamp           = timestamp;
@@ -27,7 +26,7 @@ jQuery(document).ready(function($){
 			interestPoints      = interestPoints.toFixed(2);
 
 			// Is saving
-			if (points > 0 && interestPoints > 0) {
+			if (points > 0) {
 				$(self).next().next('.interest-points').text(interestPoints);
 			}
 		} else {
@@ -39,8 +38,8 @@ jQuery(document).ready(function($){
 	var arr = new Array();
 	var sum = 0;
 
-	$(".interest-points").each(function(){
-	   var val = $(this).text();
+	jQuery(".interest-points").each(function(){
+	   var val = jQuery(this).text();
 	   if (val > 0 ) {
 		   arr.push(parseFloat(val));
 	   }
@@ -50,6 +49,7 @@ jQuery(document).ready(function($){
 	for (i=0; i < arr.length; i++) {
 		sum +=arr[i];
 	}
-	var html = '<strong>' + sum + '</strong>';
-	$("p:contains('My total interest points')" ).append(html)
+
+	jQuery("p:contains('My total interest points')" ).append(sum)
 });
+

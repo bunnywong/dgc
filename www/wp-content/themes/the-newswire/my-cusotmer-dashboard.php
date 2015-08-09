@@ -13,8 +13,6 @@ get_header(); ?>
 
 				<?php get_template_part( 'content', 'page' ); ?>
 
-				<a href="/profile">My Profile</a>
-
 				<?php comments_template( '', true ); ?>
 
 				<?php endwhile; // end of the loop. ?>
