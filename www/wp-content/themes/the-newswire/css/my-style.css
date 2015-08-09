@@ -1,3 +1,13 @@
 #search-icon {
 	display: none;
 }
+
+.printandpdf {
+	display: block;
+	margin: 20px 30px 30px 0px;
+	display: block;
+}
+
+.printandpdf > img {
+	margin: 10px 0px 0px 0px;
+}
