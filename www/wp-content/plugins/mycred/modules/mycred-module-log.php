@@ -230,8 +230,17 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 				wp_send_json_error(  __( 'Access denied for this action', 'mycred' ) );
 
 			// Get new entry
-			$new_entry = trim( $_POST['new_entry'] );
-			$new_entry = esc_attr( $new_entry );
+      $credit = trim( $_POST['credit'] );
+        $credit = esc_attr( $credit );
+      $new_entry = trim( $_POST['new_entry'] );
+        $new_entry = esc_attr( $new_entry );
+      $time = trim( $_POST['time'] );
+        $time = esc_attr( $time );
+        $time = DateTime::createFromFormat('Y-m-d', $time);
+        $time = $time->getTimestamp();
+
+      error_log('time: ' . $time);
+      error_log('Credit: ' . $credit);
 
 			global $wpdb;
 
@@ -247,8 +256,8 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 				$this->core->log_table,
         array(
           'entry' => $new_entry,
-          'time' => current_time('timestamp', $gmt = 8), //@todo: get from field
-          // 'creds' => $points, //@todo: get from field
+          'time' => $time, //@todo: ajax update
+          'creds' => $credit, //@todo: get from field
           ),
 				array( 'id' => $row->id ),
 				array( '%s' ),
@@ -260,7 +269,9 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 				'label'         => __( 'Entry Updated' ),
 				'row_id'        => $row->id,
 				'new_entry_raw' => $new_entry,
-				'new_entry'     => $this->core->parse_template_tags( $new_entry, $row )
+				'new_entry'     => $this->core->parse_template_tags( $new_entry, $row ),
+        'new_time' => gmdate("Y-m-d", $time),
+        'new_credit' => $credit,
 			) );
 
 		}

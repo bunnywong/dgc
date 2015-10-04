@@ -132,13 +132,13 @@ jQuery(function($) {
     log_date = log_date.substring(0, (log_date.length - 8));
 
     // Init date
-    function zeroFill(i) {
+    function zeroPad(i) {
       return (i < 10 ? '0' : '') + i
     }
     var log_date = new Date(log_date);
     var year = log_date.getFullYear();
-    var month = zeroFill(log_date.getMonth());
-    var date = zeroFill(log_date.getDate());
+    var month = zeroPad(log_date.getMonth() + 1);
+    var date = zeroPad(log_date.getDate());
 
     time_input_el.val( year + '-' + month + '-' + date );
 
@@ -170,7 +170,7 @@ jQuery(function($) {
 	/**
 	 * Edit AJAX Call
 	 */
-	var mycred_update_log_entry = function( rowid, entry, button ) {
+	var mycred_update_log_entry = function( rowid, formData, button ) {
 		var button_label = button.val();
 
 		$.ajax({
@@ -179,12 +179,13 @@ jQuery(function($) {
 				action    : 'mycred-update-log-entry',
 				token     : myCREDLog.tokens.update_row,
 				row       : rowid,
-				new_entry : entry
+        new_entry : formData.entry,
+        credit    : formData.credit,
+				time      : formData.time,
 			},
 			dataType   : "JSON",
 			url        : myCREDLog.ajaxurl,
 			beforeSend : function() {
-			
 				button.removeClass( 'button-primary' );
 				button.addClass( 'button-secondary' );
 				button.val( myCREDLog.working );
@@ -202,7 +203,12 @@ jQuery(function($) {
 
 					$( '#edit-mycred-log-entry #mycred-raw-entry' ).val( response.data.new_entry );
 
-					effected_row.children( 'td.column-entry' ).children( 'div.entry' ).empty().html( response.data.new_entry );
+					effected_row
+            .children( 'td.column-entry' )
+            .children( 'div.entry' ).empty().html( response.data.new_entry );
+          effected_row
+            .children( 'td.column-time' ).text(response.data.new_time);
+
 
 					$( '#edit-mycred-log-entry #mycred-new-entry' ).val( response.data.new_entry_raw );
 
@@ -226,7 +232,12 @@ jQuery(function($) {
 	 * Edit AJAX Call Trigger
 	 */
 	$( '#mycred-update-log-entry' ).click( function() {
-		mycred_update_log_entry( $(this).next().val(), $( 'input#mycred-new-entry' ).val(), $(this) );
+    var data = {
+      credit : $( 'input.js-mycred-creds' ).val(),
+      time   : $( 'input.js-mycred-date' ).val(),
+      entry  : $( 'input#mycred-new-entry' ).val(),
+    }
+		mycred_update_log_entry( $(this).next().val(), data, $(this) );
 	});
 
 	/* global setUserSetting, ajaxurl, commonL10n, alert, confirm, toggleWithKeyboard, pagenow */
