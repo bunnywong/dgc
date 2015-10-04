@@ -122,13 +122,38 @@ jQuery(function($) {
 		username_el.empty();
 		username_el.text( log_user );
 
-		var time_el = $( '#edit-mycred-log-entry #mycred-time' );
-		time_el.empty();
-		time_el.text( log_time );
+		// ==================================================
+    /* My Custom JS
+     * Override date & creds
+    */
 
-		var creds_el = $( '#edit-mycred-log-entry #mycred-creds' );
-		creds_el.empty();
-		creds_el.text( log_cred );
+    var time_input_el = $( '#edit-mycred-log-entry .js-mycred-date' );
+  	var log_date = log_time;
+    log_date = log_date.substring(0, (log_date.length - 8));
+
+    // Init date
+    function zeroFill(i) {
+      return (i < 10 ? '0' : '') + i
+    }
+    var log_date = new Date(log_date);
+    var year = log_date.getFullYear();
+    var month = zeroFill(log_date.getMonth());
+    var date = zeroFill(log_date.getDate());
+
+    time_input_el.val( year + '-' + month + '-' + date );
+
+    // Data picker
+    $('.js-mycred-date').datepicker({
+      showWeek: true,
+      firstDay: 1,
+      dateFormat: "yy-mm-dd",
+    });
+
+		// Init Credit
+    var creds_el = $( '#edit-mycred-log-entry .js-mycred-creds' );
+    creds_el.val( log_cred );
+
+    // ==================================================
 
 		var entry_el = $( '#edit-mycred-log-entry #mycred-raw-entry' );
 		entry_el.val( '' );

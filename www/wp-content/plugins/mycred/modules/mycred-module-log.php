@@ -235,7 +235,7 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 
 			global $wpdb;
 
-			// Get row
+			// Get row from `wp_myCRED_log` table ***
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->core->log_table} WHERE id = %d;", absint( $_POST['row'] ) ) );
 
 			// If row is not found
@@ -245,7 +245,11 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 			// Update row
 			$wpdb->update(
 				$this->core->log_table,
-				array( 'entry' => $new_entry ),
+        array(
+          'entry' => $new_entry,
+          'time' => current_time('timestamp', $gmt = 8), //@todo: get from field
+          // 'creds' => $points, //@todo: get from field
+          ),
 				array( 'id' => $row->id ),
 				array( '%s' ),
 				array( '%d' )
@@ -525,7 +529,7 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 								$user = get_userdata( $log_entry->user_id );
 								if ( $user === false )
 									$content = '<span>' . __( 'User Missing', 'mycred' ) . ' (ID: ' . $log_entry->user_id . ')</span>';
-								else 
+								else
 									$content = '<span>' . $user->display_name . '</span>';
 
 								if ( $user !== false && $this->core->can_edit_creds() )
@@ -609,8 +613,21 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 	<div id="edit-mycred-log-entry" style="display: none;">
 		<div class="mycred-adjustment-form">
 			<p class="row inline" style="width: 40%;"><label><?php _e( 'User', 'mycred' ); ?>:</label><span id="mycred-username"></span></p>
-			<p class="row inline" style="width: 40%;"><label><?php _e( 'Time', 'mycred' ); ?>:</label> <span id="mycred-time"></span></p>
-			<p class="row inline" style="width: 20%;"><label><?php echo $this->core->plural(); ?>:</label> <span id="mycred-creds"></span></p>
+
+      <p class="row inline" style="width: 20%;"><label><?php echo $this->core->plural(); ?>:</label>
+      <!--
+        <span id="mycred-creds"></span>
+      -->
+        <input type="text" name="mycred-creds" class="js-mycred-creds" value="" />
+      </p>
+
+      <p class="row inline" style="width: 40%;"><label><?php _e( 'Time', 'mycred' ); ?>:</label>
+      <!--
+        <span id="mycred-time"></span>
+      -->
+        <input type="text" name="mycred-date" class="js-mycred-date" value="" />
+      </p>
+
 			<div class="clear"></div>
 			<p class="row">
 				<label for="mycred-update-users-balance-amount"><?php _e( 'Current Log Entry', 'mycred' ); ?>:</label>
