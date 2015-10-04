@@ -1008,3 +1008,12 @@ function user_search_form(){
 		}
 	endif;
 	add_action('wp_enqueue_scripts', 'my_custom_style');
+
+  // Custom admin JS
+  function custom_admin_js() {
+    $url = get_bloginfo('template_directory') . '/js/wp-admin.js';
+    echo '<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">';
+    echo '<script type="text/javascript" src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>';
+    echo '<script type="text/javascript" src="' . $url .'"></script>';
+  }
+add_action('admin_footer', 'custom_admin_js');
