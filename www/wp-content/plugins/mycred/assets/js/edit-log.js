@@ -143,7 +143,7 @@ jQuery(function($) {
     time_input_el.val( year + '-' + month + '-' + date );
 
     // Data picker
-    $('.js-mycred-date').datepicker({
+    $('.js-date-picker').datepicker({
       showWeek: true,
       firstDay: 1,
       dateFormat: "yy-mm-dd",

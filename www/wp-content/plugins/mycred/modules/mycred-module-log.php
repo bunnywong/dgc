@@ -63,7 +63,10 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 		public function module_admin_init() {
 
 			add_action( 'wp_ajax_mycred-delete-log-entry', array( $this, 'action_delete_log_entry' ) );
-			add_action( 'wp_ajax_mycred-update-log-entry', array( $this, 'action_update_log_entry' ) );
+      add_action( 'wp_ajax_mycred-update-log-entry', array( $this, 'action_update_log_entry' ) );
+
+      // My Custom
+			add_action( 'wp_ajax_mycred-last-log-entry', array( $this, 'action_update_log_entry' ) );
 
 		}
 
@@ -623,6 +626,24 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 
 	<div id="edit-mycred-log-entry" style="display: none;">
 		<div class="mycred-adjustment-form">
+
+
+      <p>
+        <label for="mycred-withdraw-title"><strong><?php _e( 'Withdraw', 'mycred' ); ?></strong></label><br />
+
+        <label for="mycred-withdraw-title"><strong><?php _e( 'Enable', 'mycred' ); ?>:</strong></label>
+        <input type="checkbox" name="withdraw-all-with-interest" class="js-withdraw-all-with-interest" value="" style="margin-left: 10px;"/>
+        <input type="text" name="interest" class="js-interest" value="30.90" style="margin-left: 20px; width: 85px;" disabled /><br />
+
+        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Date', 'mycred' ); ?>:</strong></label><br />
+        <input type="text" name="mycred-withdraw-entry" class="js-date-picker style-long" value="" /><br />
+
+        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Entry', 'mycred' ); ?>:</strong></label><br />
+        <input type="text" name="mycred-withdraw-entry" value="" /><br />
+      </p>
+
+<hr>
+
 			<p class="row inline" style="width: 40%;"><label><?php _e( 'User', 'mycred' ); ?>:</label><span id="mycred-username"></span></p>
 
       <p class="row inline" style="width: 20%;"><label><?php echo $this->core->plural(); ?>:</label>
@@ -632,11 +653,11 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
         <input type="text" name="mycred-creds" class="js-mycred-creds" value="" />
       </p>
 
-      <p class="row inline" style="width: 40%;"><label><?php _e( 'Time', 'mycred' ); ?>:</label>
+      <p class="row inline" style="width: 40%;"><label><?php _e( 'Date', 'mycred' ); ?>:</label>
       <!--
         <span id="mycred-time"></span>
       -->
-        <input type="text" name="mycred-date" class="js-mycred-date" value="" />
+        <input type="text" name="mycred-date" class="js-mycred-date js-date-picker" value="" />
       </p>
 
 			<div class="clear"></div>
