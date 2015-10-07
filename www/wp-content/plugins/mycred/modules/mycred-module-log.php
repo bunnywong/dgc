@@ -625,24 +625,30 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 	<?php do_action( 'mycred_bottom_log_page', $this ); ?>
 
 	<div id="edit-mycred-log-entry" style="display: none;">
-		<div class="mycred-adjustment-form">
-
-
-      <p>
-        <label for="mycred-withdraw-title"><strong><?php _e( 'Withdraw', 'mycred' ); ?></strong></label><br />
-
-        <label for="mycred-withdraw-title"><strong><?php _e( 'Enable', 'mycred' ); ?>:</strong></label>
-        <input type="checkbox" name="withdraw-all-with-interest" class="js-withdraw-all-with-interest" value="" style="margin-left: 10px;"/>
-        <input type="text" name="interest" class="js-interest" value="30.90" style="margin-left: 20px; width: 85px;" disabled /><br />
-
-        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Date', 'mycred' ); ?>:</strong></label><br />
-        <input type="text" name="mycred-withdraw-entry" class="js-date-picker style-long" value="" /><br />
-
-        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Entry', 'mycred' ); ?>:</strong></label><br />
-        <input type="text" name="mycred-withdraw-entry" value="" /><br />
+		<div class="mycred-adjustment-form js-mycred-adjustment-form">
+      <p class="row">
+        <label for="mycred-withdraw-title"><strong><?php _e( 'Withdraw:', 'mycred' ); ?></strong></label><br />
       </p>
 
-<hr>
+
+      <p class="row">
+        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Date', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="mycred-withdraw-entry" class="js-date-picker js-withdraw-date" value="" /><br />
+      </p>
+      <p>
+        <label for="mycred-withdraw-intrest-rate"><strong><?php _e( 'Interest rate' ); ?>: </strong></label>
+        <input type="text" name="interest" class="js-interest-rate" style="margin-left: 20px; width: 85px;" value="<?php echo round((float)WP_INTEREST_RATE * 100 ) . '%'; ?>" disabled="disabled" /><br />
+      </p>
+      <p class="row">
+        <label for="mycred-interest-points"><strong><?php _e( 'Interest Points', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="interest" class="js-interest-points" disabled="disabled" /><br />
+      </p>
+      <p class="row">
+        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Entry', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="mycred-withdraw-entry style-long" value="" /><br />
+      </p>
+
+      <hr>
 
 			<p class="row inline" style="width: 40%;"><label><?php _e( 'User', 'mycred' ); ?>:</label><span id="mycred-username"></span></p>
 
