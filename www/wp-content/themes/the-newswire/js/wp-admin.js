@@ -11,11 +11,8 @@ jQuery(document).ready(function($){
       var totalInterestPoint = (points * interestRate) / 365 * dayGap;
       totalInterestPoint     = Math.round(totalInterestPoint * 100) / 100;
 
-
-
-      $('.js-interest-points').val( dayGap + ' days / Interest Points ' + totalInterestPoint);
-
-console.log('Answer: ' + dayGap * interestRate);
+      $('.js-interest-points').val( /*dayGap + ' days / Interest Points ' +*/ totalInterestPoint);
   });
+
 });
 

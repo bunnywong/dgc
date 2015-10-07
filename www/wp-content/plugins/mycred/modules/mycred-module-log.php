@@ -626,40 +626,40 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 
 	<div id="edit-mycred-log-entry" style="display: none;">
 		<div class="mycred-adjustment-form js-mycred-adjustment-form">
-      <p class="row">
-        <label for="mycred-withdraw-title"><strong><?php _e( 'Withdraw:', 'mycred' ); ?></strong></label><br />
-      </p>
+      <h3><?php _e( 'Withdraw:', 'mycred' ); ?></h3>
 
-
-      <p class="row">
-        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Date', 'mycred' ); ?>:</strong></label>
-        <input type="text" name="mycred-withdraw-entry" class="js-date-picker js-withdraw-date" value="" /><br />
-      </p>
-      <p>
+      <p class="row inline" style="width: 30%;">
         <label for="mycred-withdraw-intrest-rate"><strong><?php _e( 'Interest rate' ); ?>: </strong></label>
-        <input type="text" name="interest" class="js-interest-rate" style="margin-left: 20px; width: 85px;" value="<?php echo round((float)WP_INTEREST_RATE * 100 ) . '%'; ?>" disabled="disabled" /><br />
+        <input type="text" name="interest" class="js-interest-rate" value="<?php echo round((float)WP_INTEREST_RATE * 100 ) . '%'; ?>" /><br />
       </p>
-      <p class="row">
+      <p class="row inline" style="width: 30%;">
         <label for="mycred-interest-points"><strong><?php _e( 'Interest Points', 'mycred' ); ?>:</strong></label>
-        <input type="text" name="interest" class="js-interest-points" disabled="disabled" /><br />
+        <input type="text" name="interest" class="js-interest-points" disabled="disabled" style="border: 1px solid lightcoral;"/><br />
       </p>
+      <p class="row inline" style="width: 30%;">
+        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Date', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="mycred-withdraw-entry" class="js-date-picker js-withdraw-date" tabindex="2" /><br />
+      </p>
+
       <p class="row">
-        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Entry', 'mycred' ); ?>:</strong></label>
-        <input type="text" name="mycred-withdraw-entry style-long" value="" /><br />
+        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Log Entry', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="mycred-withdraw-entry style-long" tabindex="1" /><br />
       </p>
 
-      <hr>
+      <div class="clear" style="border: 1px solid lightgray; margin-top: 20px; display: block; "></div>
 
-			<p class="row inline" style="width: 40%;"><label><?php _e( 'User', 'mycred' ); ?>:</label><span id="mycred-username"></span></p>
+      <h3><?php _e( 'Adjustment:', 'mycred' ); ?></h3>
 
-      <p class="row inline" style="width: 20%;"><label><?php echo $this->core->plural(); ?>:</label>
+			<p class="row inline" style="width: 30%;"><label><?php _e( 'User', 'mycred' ); ?>:</label><span id="mycred-username"></span></p>
+
+      <p class="row inline" style="width: 30%;"><label><?php echo $this->core->plural(); ?>:</label>
       <!--
         <span id="mycred-creds"></span>
       -->
         <input type="text" name="mycred-creds" class="js-mycred-creds" value="" />
       </p>
 
-      <p class="row inline" style="width: 40%;"><label><?php _e( 'Date', 'mycred' ); ?>:</label>
+      <p class="row inline" style="width: 30%;"><label><?php _e( 'Date', 'mycred' ); ?>:</label>
       <!--
         <span id="mycred-time"></span>
       -->
