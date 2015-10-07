@@ -1015,5 +1015,6 @@ function user_search_form(){
     echo '<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">';
     echo '<script type="text/javascript" src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>';
     echo '<script type="text/javascript" src="' . $url .'"></script>';
+    echo '<script type="text/javascript" src="' . site_url() .'/wp-content/themes/the-newswire/library/js/moment.js"></script>';
   }
 add_action('admin_footer', 'custom_admin_js');
