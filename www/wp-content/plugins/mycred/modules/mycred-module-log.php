@@ -218,12 +218,21 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 
 		}
 
+    /**
+     * Custom function
+     * Get date from timestamp
+     */
+    public function custom_get_date($timestamp) {
+      $time = DateTime::createFromFormat('Y-m-d', $timestamp);
+      return $time->getTimestamp();
+    }
+
 		/**
 		 * Update Log Entry Action
 		 * @since 1.4
 		 * @version 1.0
 		 */
-		public function action_update_log_entry() {
+    public function action_update_log_entry() {
 
 			// Security
 			check_ajax_referer( 'mycred-update-log-entry', 'token' );
@@ -235,12 +244,16 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 			// Get new entry
       $credit = esc_attr(trim( $_POST['credit'] ));
       $new_entry = esc_attr(trim( $_POST['new_entry'] ));
+
       $time = esc_attr(trim( $_POST['time'] ));
-        $time = DateTime::createFromFormat('Y-m-d', $time);
-        $time = $time->getTimestamp();
-      $withdraw_date     = esc_attr(trim( $_POST['withdrawDate'] ));
-        $withdraw_date = DateTime::createFromFormat('Y-m-d', $withdraw_date);
-        $withdraw_date = $withdraw_date->getTimestamp();
+      $time = $this->custom_get_date($time);
+
+      if (isset($_POST['withdrawDate']) && $_POST['withdrawDate'] != '') {
+        $withdraw_date = esc_attr(trim( $_POST['withdrawDate'] ));
+        $withdraw_date = $this->custom_get_date($withdraw_date);
+      } else {
+        $withdraw_date = NULL;
+      }
 
       $withdraw_interest_rate   = esc_attr(trim( $_POST['withdrawInterestRate'] ));
       $withdraw_interest_points = esc_attr(trim( $_POST['withdrawInterestPoints'] ));
@@ -536,7 +549,12 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 					else
 						$class = '';
 
-					echo '<tr class="myCRED-log-row' . $class . '" id="mycred-log-entry-' . $log_entry->id . '">';
+					echo '<tr class="myCRED-log-row js-data-row' . $class . '" id="mycred-log-entry-' . $log_entry->id . '"';
+          echo ' data-withdraw-time="'.$log_entry->withdraw_time . '"';
+          echo ' data-withdraw-points-interest="'.$log_entry->withdraw_points_interest . '"';
+          echo ' data-withdraw-points-total="'.$log_entry->withdraw_points_total . '"';
+          echo ' data-withdraw-entry="'.$log_entry->withdraw_entry . '"';
+          echo '">';
 
 					// Run though columns
 					foreach ( $log->headers as $column_id => $column_name ) {

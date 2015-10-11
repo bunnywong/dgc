@@ -153,7 +153,32 @@ jQuery(function($) {
     var creds_el = $( '#edit-mycred-log-entry .js-mycred-creds' );
     creds_el.val( log_cred );
 
-    // ==================================================
+// ================================================================================
+  // Insert custom value when dialog pop up
+
+  var withdrawTime = $(this).parent().parent('.js-data-row').data('withdraw-time');
+  var withdrawPointsInterest = $(this).parent().parent('.js-data-row').data('withdraw-points-interest');
+  var withdrawPointsTotal = $(this).parent().parent('.js-data-row').data('withdraw-points-total');
+  var withdrawEntry = $(this).parent().parent('.js-data-row').data('withdraw-entry');
+
+  if (withdrawTime == 0) {
+    withdrawTime = '';
+  } else {
+    withdrawTime = moment.unix(withdrawTime).format('YYYY-MM-DD');
+  }
+
+  if (withdrawPointsInterest == 0)
+    withdrawPointsInterest = '';
+
+  if (withdrawPointsTotal == 0)
+    withdrawPointsTotal = '';
+
+  $('.js-withdraw-date').val(withdrawTime);
+  $('.js-interest-points').val(withdrawPointsInterest);
+  $('.js-withdraw-points-total').val(withdrawPointsTotal);
+  $('.js-withdraw-entry').val(withdrawEntry);
+
+// ================================================================================
 
 		var entry_el = $( '#edit-mycred-log-entry #mycred-raw-entry' );
 		entry_el.val( '' );
