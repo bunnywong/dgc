@@ -1,6 +1,13 @@
 jQuery(document).ready(function($){
   $('.js-interest-rate, .js-withdraw-date, .js-mycred-date').change(function() {
       var withDrawDate       = $('.js-withdraw-date').val();
+      if (withDrawDate == '') {
+        $('.js-interest-points').val( '' );
+        $('.js-withdraw-points-total').val( '' );
+        $('.js-withdraw-entry').val( '' );
+        return false;
+      }
+
       var depositDate        = $('.js-mycred-date').val();
       withDrawDate           = moment(withDrawDate, 'YYYY-MM-DD');
       depositDate            = moment(depositDate, 'YYYY-MM-DD');
@@ -8,11 +15,16 @@ jQuery(document).ready(function($){
       var dayGap             = withDrawDate.diff(depositDate, 'days');
       var interestRate       = $('.js-interest-rate').val();
       interestRate           = parseFloat(interestRate) / 100.0;
-      var totalInterestPoint = (points * interestRate) / 365 * dayGap;
-      totalInterestPoint     = Math.round(totalInterestPoint * 100) / 100;
-      totalInterestPoint > 0 ? totalInterestPoint = totalInterestPoint : totalInterestPoint = 0; // Validator
+      var totalInterestPoints = (points * interestRate) / 365 * dayGap;
+      totalInterestPoints     = Math.round(totalInterestPoints * 100) / 100;
+      totalInterestPoints > 0 ? totalInterestPoints = totalInterestPoints : totalInterestPoints = 0; // Validator
 
-      $('.js-interest-points').val( /*dayGap + ' days / Interest Points ' +*/ totalInterestPoint);
+      // Update interest points
+      $('.js-interest-points').val( totalInterestPoints );
+
+      var total = parseFloat(points) + parseFloat(totalInterestPoints);
+      if (total > 0)
+        $('.js-withdraw-points-total').val( total );
   });
 
 });
