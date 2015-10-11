@@ -233,34 +233,42 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 				wp_send_json_error(  __( 'Access denied for this action', 'mycred' ) );
 
 			// Get new entry
-      $credit = trim( $_POST['credit'] );
-        $credit = esc_attr( $credit );
-      $new_entry = trim( $_POST['new_entry'] );
-        $new_entry = esc_attr( $new_entry );
-      $time = trim( $_POST['time'] );
-        $time = esc_attr( $time );
+      $credit = esc_attr(trim( $_POST['credit'] ));
+      $new_entry = esc_attr(trim( $_POST['new_entry'] ));
+      $time = esc_attr(trim( $_POST['time'] ));
         $time = DateTime::createFromFormat('Y-m-d', $time);
         $time = $time->getTimestamp();
+      $withdraw_date     = esc_attr(trim( $_POST['withdrawDate'] ));
+        $withdraw_date = DateTime::createFromFormat('Y-m-d', $withdraw_date);
+        $withdraw_date = $withdraw_date->getTimestamp();
 
-      error_log('time: ' . $time);
-      error_log('Credit: ' . $credit);
+      $withdraw_interest_rate   = esc_attr(trim( $_POST['withdrawInterestRate'] ));
+      $withdraw_interest_points = esc_attr(trim( $_POST['withdrawInterestPoints'] ));
+      $withdraw_points_total    = esc_attr(trim( $_POST['withdrawPointsTotal'] ));
+      $withdraw_entry           = esc_attr(trim( $_POST['withdrawEntry'] ));
+
+      // error_log('$_POST[withdrawDate]: ' . $_POST['withdrawDate']);
 
 			global $wpdb;
 
-			// Get row from `wp_myCRED_log` table ***
+			// Get row from `wp_myCRED_log` table
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->core->log_table} WHERE id = %d;", absint( $_POST['row'] ) ) );
 
 			// If row is not found
 			if ( empty( $row ) || $row === NULL )
 				wp_send_json_error( __( 'Log entry not found', 'mycred' ) );
 
-			// Update row
+			// Update row ***
 			$wpdb->update(
 				$this->core->log_table,
         array(
           'entry' => $new_entry,
-          'time' => $time, //@todo: ajax update
-          'creds' => $credit, //@todo: get from field
+          'time' => $time,
+          'creds' => $credit,
+          'withdraw_time' => $withdraw_date,
+          'withdraw_points_interest' => $withdraw_interest_points,
+          'withdraw_points_total' => $withdraw_points_total,
+          'withdraw_entry' => $withdraw_entry,
           ),
 				array( 'id' => $row->id ),
 				array( '%s' ),
@@ -629,21 +637,27 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
       <h3><?php _e( 'Withdraw:', 'mycred' ); ?></h3>
 
       <p class="row inline" style="width: 30%;">
-        <label for="mycred-withdraw-intrest-rate"><strong><?php _e( 'Interest rate' ); ?> %: </strong></label>
-        <input type="number" name="interest" class="js-interest-rate" value="<?php echo round((float)WP_INTEREST_RATE * 100 ); ?>" min="1" max="100" /><br />
+        <label><strong><?php _e( 'Interest rate' ); ?> %: </strong></label>
+        <input type="number" name="withdrawInterestRate" class="js-interest-rate" value="<?php echo round((float)WP_INTEREST_RATE * 100 ); ?>" min="1" max="100" /><br />
       </p>
       <p class="row inline" style="width: 30%;">
-        <label for="mycred-interest-points"><strong><?php _e( 'Interest Points', 'mycred' ); ?>:</strong></label>
-        <input type="text" name="interest" class="js-interest-points" disabled="disabled" style="border: 1px solid lightcoral;"/><br />
+        <label><strong><?php _e( 'Interest Points', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="withdrawInterestPoints" class="js-interest-points" style="border: 1px solid lightcoral;" disabled="disabled" /><br />
       </p>
       <p class="row inline" style="width: 30%;">
-        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Date', 'mycred' ); ?>:</strong></label>
-        <input type="text" name="mycred-withdraw-entry" class="js-date-picker js-withdraw-date" tabindex="2" /><br />
+        <label><strong><?php _e( 'Withdraw Total', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="withdrawTotal" class="js-withdraw-points-total" style="border: 1px solid lightcoral;" disabled="disabled" /><br />
+      </p>
+
+
+      <p class="row" style="width: 50%;">
+        <label><strong><?php _e( 'Withdraw Date', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="withdrawDate" class="js-date-picker js-withdraw-date" tabindex="2" /><br />
       </p>
 
       <p class="row">
-        <label for="mycred-withdraw-entry"><strong><?php _e( 'Withdraw Log Entry', 'mycred' ); ?>:</strong></label>
-        <input type="text" name="mycred-withdraw-entry style-long" tabindex="1" /><br />
+        <label><strong><?php _e( 'Withdraw Log Entry', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="withdrawEntry" class="js-withdraw-entry" tabindex="1" /><br />
       </p>
 
       <div class="clear" style="border: 1px solid lightgray; margin-top: 20px; display: block; "></div>

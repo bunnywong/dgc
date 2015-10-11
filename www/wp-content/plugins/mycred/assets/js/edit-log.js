@@ -176,12 +176,17 @@ jQuery(function($) {
 		$.ajax({
 			type       : "POST",
 			data       : {
-				action    : 'mycred-update-log-entry',
-				token     : myCREDLog.tokens.update_row,
-				row       : rowid,
-        new_entry : formData.entry,
-        credit    : formData.credit,
-				time      : formData.time,
+        action                 : 'mycred-update-log-entry',
+        token                  : myCREDLog.tokens.update_row,
+        row                    : rowid,
+        new_entry              : formData.entry,
+        credit                 : formData.credit,
+        time                   : formData.time,
+        withdrawDate           : formData.withdrawDate,
+        withdrawInterestRate   : formData.withdrawInterestRate,
+        withdrawInterestPoints : formData.withdrawInterestPoints,
+        withdrawPointsTotal    : formData.withdrawPointsTotal,
+        withdrawEntry          : formData.withdrawEntry,
 			},
 			dataType   : "JSON",
 			url        : myCREDLog.ajaxurl,
@@ -192,12 +197,14 @@ jQuery(function($) {
 			},
 			success    : function( response ) {
 				// Debug
-				console.log( response );
+				// console.log( response );
+        console.log(response.data);
 
 				var effected_row = $( '#mycred-log-entry-' + response.data.row_id );
 				button.removeClass( 'button-secondary' );
 
 				if ( response.success ) {
+
 					effected_row.addClass( 'updated-row' );
 					effected_row.children( 'td.column-entry' ).children( 'div.raw' ).empty().html( response.data.new_entry_raw );
 
@@ -233,9 +240,14 @@ jQuery(function($) {
 	 */
 	$( '#mycred-update-log-entry' ).click( function() {
     var data = {
-      credit : $( 'input.js-mycred-creds' ).val(),
-      time   : $( 'input.js-mycred-date' ).val(),
-      entry  : $( 'input#mycred-new-entry' ).val(),
+      credit                 : $( 'input.js-mycred-creds' ).val(),
+      time                   : $( 'input.js-mycred-date' ).val(),
+      entry                  : $( 'input#mycred-new-entry' ).val(),
+      withdrawDate           : $( 'input.js-withdraw-date' ).val(),
+      withdrawInterestRate   : $( 'input.js-interest-rate' ).val(),
+      withdrawInterestPoints : $( 'input.js-interest-points' ).val(),
+      withdrawPointsTotal          : $( 'input.js-withdraw-points-total' ).val(),
+      withdrawEntry          : $( 'input.js-withdraw-entry' ).val(),
     }
 		mycred_update_log_entry( $(this).next().val(), data, $(this) );
 	});
