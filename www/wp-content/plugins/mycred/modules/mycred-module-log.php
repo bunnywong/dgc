@@ -629,8 +629,8 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
       <h3><?php _e( 'Withdraw:', 'mycred' ); ?></h3>
 
       <p class="row inline" style="width: 30%;">
-        <label for="mycred-withdraw-intrest-rate"><strong><?php _e( 'Interest rate' ); ?>: </strong></label>
-        <input type="text" name="interest" class="js-interest-rate" value="<?php echo round((float)WP_INTEREST_RATE * 100 ) . '%'; ?>" /><br />
+        <label for="mycred-withdraw-intrest-rate"><strong><?php _e( 'Interest rate' ); ?> %: </strong></label>
+        <input type="number" name="interest" class="js-interest-rate" value="<?php echo round((float)WP_INTEREST_RATE * 100 ); ?>" min="1" max="100" /><br />
       </p>
       <p class="row inline" style="width: 30%;">
         <label for="mycred-interest-points"><strong><?php _e( 'Interest Points', 'mycred' ); ?>:</strong></label>

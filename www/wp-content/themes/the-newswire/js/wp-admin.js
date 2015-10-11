@@ -1,5 +1,5 @@
 jQuery(document).ready(function($){
-  $('.js-withdraw-date, .js-mycred-date').change(function() {
+  $('.js-interest-rate, .js-withdraw-date, .js-mycred-date').change(function() {
       var withDrawDate       = $('.js-withdraw-date').val();
       var depositDate        = $('.js-mycred-date').val();
       withDrawDate           = moment(withDrawDate, 'YYYY-MM-DD');
@@ -10,6 +10,7 @@ jQuery(document).ready(function($){
       interestRate           = parseFloat(interestRate) / 100.0;
       var totalInterestPoint = (points * interestRate) / 365 * dayGap;
       totalInterestPoint     = Math.round(totalInterestPoint * 100) / 100;
+      totalInterestPoint > 0 ? totalInterestPoint = totalInterestPoint : totalInterestPoint = 0; // Validator
 
       $('.js-interest-points').val( /*dayGap + ' days / Interest Points ' +*/ totalInterestPoint);
   });
