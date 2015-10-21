@@ -182,7 +182,7 @@ console.log('withdrawPaymentStatus: (' + withdrawPaymentStatus + ')');
   $('.js-interest-points').val(withdrawPointsInterest);
   $('.js-withdraw-points-total').val(withdrawPointsTotal);
   $('.js-withdraw-entry').val(withdrawEntry);
-  if (withdrawPaymentStatus == '' || withdrawPaymentStatus == 'null') {
+  if (withdrawPaymentStatus == null) {
     $('.js-withdraw-payment-status.none').prop('checked', 'checked');
   } else {
     $('.js-withdraw-payment-status.' + withdrawPaymentStatus).prop('checked', 'checked');
