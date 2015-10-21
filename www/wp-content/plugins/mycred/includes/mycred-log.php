@@ -735,16 +735,18 @@ jQuery(function($) {
 
           $status = $log_entry->withdraw_payment_status;
 
-          if ($status == '') { // Points in bank
+           // Points in bank
+          if ($status == 'null' || $status == '') {
             global $my_total_points;
             $my_total_points +=  $log_entry->creds;
           }
 
           // Show withdraw depend on with draw time value
           if ($log_entry->withdraw_time != 0) {
-            if ($status == '') { // Points in bank
+            if ($status == 'null') { // Points in bank ***
               global $my_total_interest_points;
               $my_total_interest_points += $log_entry->withdraw_points_interest;
+              $status = '';
             } else {
               $status = '<span class="tag-payment-status">Paid by ' . $status . '</span> ';
             }
