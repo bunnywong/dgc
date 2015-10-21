@@ -1,4 +1,8 @@
 jQuery(document).ready(function($){
+  $('body.wp-admin #user-search-input')
+    .width(300)
+    .attr('placeholder', 'CU number / Name / ID Card / Telephone')
+
   $('.js-interest-rate, .js-withdraw-date, .js-mycred-date').change(function() {
       var withDrawDate       = $('.js-withdraw-date').val();
       if (withDrawDate == '') {
