@@ -154,13 +154,18 @@ jQuery(function($) {
     creds_el.val( log_cred );
 
 // ================================================================================
+  // @Edit Log Entry
   // Insert custom value when dialog pop up
 
-  var withdrawTime = $(this).parent().parent('.js-data-row').data('withdraw-time');
+  var withdrawTime           = $(this).parent().parent('.js-data-row').data('withdraw-time');
   var withdrawPointsInterest = $(this).parent().parent('.js-data-row').data('withdraw-points-interest');
-  var withdrawPointsTotal = $(this).parent().parent('.js-data-row').data('withdraw-points-total');
-  var withdrawEntry = $(this).parent().parent('.js-data-row').data('withdraw-entry');
+  var withdrawPointsTotal    = $(this).parent().parent('.js-data-row').data('withdraw-points-total');
+  var withdrawEntry          = $(this).parent().parent('.js-data-row').data('withdraw-entry');
+  var withdrawPaymentStatus  = $(this).parent().parent('.js-data-row').data('withdraw-payment-status');
 
+console.log('withdrawPaymentStatus: (' + withdrawPaymentStatus + ')');
+
+  // Display interest data depend on interest date
   if (withdrawTime == 0) {
     withdrawTime = '';
   } else {
@@ -177,6 +182,11 @@ jQuery(function($) {
   $('.js-interest-points').val(withdrawPointsInterest);
   $('.js-withdraw-points-total').val(withdrawPointsTotal);
   $('.js-withdraw-entry').val(withdrawEntry);
+  if (withdrawPaymentStatus == '' || withdrawPaymentStatus == 'null') {
+    $('.js-withdraw-payment-status.none').prop('checked', 'checked');
+  } else {
+    $('.js-withdraw-payment-status.' + withdrawPaymentStatus).prop('checked', 'checked');
+  }
 
 // ================================================================================
 
@@ -187,7 +197,7 @@ jQuery(function($) {
 		var raw_entry_el = $( '#edit-mycred-log-entry #mycred-new-entry' );
 		raw_entry_el.val( '' );
 		raw_entry_el.val( log_entry_raw );
-		
+
 		$( 'input#mycred-log-row-id' ).val( log_row_id );
 
 	});
@@ -212,6 +222,7 @@ jQuery(function($) {
         withdrawInterestPoints : formData.withdrawInterestPoints,
         withdrawPointsTotal    : formData.withdrawPointsTotal,
         withdrawEntry          : formData.withdrawEntry,
+        withdrawPaymentStatus  : formData.withdrawPaymentStatus,
 			},
 			dataType   : "JSON",
 			url        : myCREDLog.ajaxurl,
@@ -271,9 +282,11 @@ jQuery(function($) {
       withdrawDate           : $( 'input.js-withdraw-date' ).val(),
       withdrawInterestRate   : $( 'input.js-interest-rate' ).val(),
       withdrawInterestPoints : $( 'input.js-interest-points' ).val(),
-      withdrawPointsTotal          : $( 'input.js-withdraw-points-total' ).val(),
+      withdrawPointsTotal    : $( 'input.js-withdraw-points-total' ).val(),
       withdrawEntry          : $( 'input.js-withdraw-entry' ).val(),
+      withdrawPaymentStatus  : $( 'input.js-withdraw-payment-status:checked' ).val(),
     }
+    console.log('data:' + data);
 		mycred_update_log_entry( $(this).next().val(), data, $(this) );
 	});
 

@@ -259,8 +259,9 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
       $withdraw_interest_points = esc_attr(trim( $_POST['withdrawInterestPoints'] ));
       $withdraw_points_total    = esc_attr(trim( $_POST['withdrawPointsTotal'] ));
       $withdraw_entry           = esc_attr(trim( $_POST['withdrawEntry'] ));
-
-      // error_log('$_POST[withdrawDate]: ' . $_POST['withdrawDate']);
+      $withdraw_payment_status  = esc_attr(trim( $_POST['withdrawPaymentStatus'] ));
+      // @debug ***
+      // error_log('$_POST[withdraw_payment_status]: ' . $_POST['withdraw_payment_status']);
 
 			global $wpdb;
 
@@ -282,6 +283,7 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
           'withdraw_points_interest' => $withdraw_interest_points,
           'withdraw_points_total' => $withdraw_points_total,
           'withdraw_entry' => $withdraw_entry,
+          'withdraw_payment_status' => $withdraw_payment_status,
           ),
 				array( 'id' => $row->id ),
 				array( '%s' ),
@@ -554,6 +556,7 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
           echo ' data-withdraw-points-interest="'.$log_entry->withdraw_points_interest . '"';
           echo ' data-withdraw-points-total="'.$log_entry->withdraw_points_total . '"';
           echo ' data-withdraw-entry="'.$log_entry->withdraw_entry . '"';
+          echo ' data-withdraw-payment-status="'.$log_entry->withdraw_payment_status . '"';
           echo '">';
 
 					// Run though columns
@@ -678,6 +681,23 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
         <input type="text" name="withdrawEntry" class="js-withdraw-entry" tabindex="1" /><br />
       </p>
 
+      <p class="row">
+        <label><strong><?php _e( 'Payment Status', 'mycred' ); ?>:</strong></label>
+        <label style="display: inline-block; margin-right: 10px;">
+          <input type="radio" name="paymentStatus" class="js-withdraw-payment-status none" value="null" />none
+        </label>
+        <label style="display: inline-block; margin-right: 10px;">
+          <input type="radio" name="paymentStatus" class="js-withdraw-payment-status cash" value="cash" />cash
+        </label>
+        <label style="display: inline-block; margin-right: 10px;">
+          <input type="radio" name="paymentStatus" class="js-withdraw-payment-status cheque" value="cheque" />check
+        </label>
+        <label style="display: inline-block; margin-right: 10px;">
+          <input type="radio" name="paymentStatus" class="js-withdraw-payment-status bank" value="bank" />bank in
+        </label>
+        <br />
+      </p>
+
       <div class="clear" style="border: 1px solid lightgray; margin-top: 20px; display: block; "></div>
 
       <h3><?php _e( 'Adjustment:', 'mycred' ); ?></h3>
@@ -706,7 +726,7 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 			</p>
 			<p class="row">
 				<label for="mycred-update-users-balance-entry"><?php _e( 'Adjust Log Entry', 'mycred' ); ?>:</label>
-				<input type="text" name="mycred-new-entry" id="mycred-new-entry" value="" /><br />
+				<input type="text" name="mycred-new-entry" id="mycred-new-entry" value=""  autocomplete="on" /><br />
 				<span class="description"><?php _e( 'The new log entry', 'mycred' ); ?>.</span>
 			</p>
 			<p class="row">

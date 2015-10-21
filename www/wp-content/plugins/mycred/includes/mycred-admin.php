@@ -403,7 +403,7 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 			// Row actions
 			$row = array();
 			$row['history'] = '<a href="' . admin_url( 'admin.php?page=' . $page . '&user_id=' . $user_id ) . '">' . __( 'History', 'mycred' ) . '</a>';
-			$row['adjust'] = '<a href="javascript:void(0)" class="mycred-open-points-editor" data-userid="' . $user_id . '" data-current="' . $ubalance . '" data-type="' . $column_name . '" data-username="' . $user->display_name . '">' . __( 'Adjust', 'mycred' ) . '</a>';
+			$row['adjust'] = '<a href="javascript:void(0)" class="mycred-open-points-editor" data-userid="' . $user_id . '" data-current="' . $ubalance . '" data-type="' . $column_name . '" data-username="' . $user->display_name . '">' . __( 'Add New', 'mycred' ) . '</a><br><a href="user-profile/?user_id='.$user_id.'" target="_blank"> User Profile</a>';
 
 			$rows = apply_filters( 'mycred_user_row_actions', $row, $user_id, $mycred );
 			$balance .= $this->row_actions( $rows );
@@ -757,7 +757,7 @@ jQuery(function($) {
 		<input type="hidden" name="mycred_update_users_balance[token]" id="mycred-update-users-balance-token" value="<?php echo wp_create_nonce( 'mycred-update-users-balance' ); ?>" />
 		<input type="hidden" name="mycred_update_users_balance[type]" id="mycred-update-users-balance-type" value="" />
 		<p class="row"><label for="mycred-update-users-balance-amount"><?php _e( 'Amount', 'mycred' ); ?>:</label><input type="text" name="mycred_update_users_balance[amount]" id="mycred-update-users-balance-amount" value="" /><br /><span class="description"><?php _e( 'A positive or negative value', 'mycred' ); ?>.</span></p>
-		<p class="row"><label for="mycred-update-users-balance-entry"><?php _e( 'Log Entry', 'mycred' ); ?>:</label><input type="text" name="mycred_update_users_balance[entry]" id="mycred-update-users-balance-entry" value="" /><br /><span class="description"><?php echo $req; ?></span></p>
+		<p class="row"><label for="mycred-update-users-balance-entry"><?php _e( 'Log Entry', 'mycred' ); ?>:</label><input type="text" name="mycred_update_users_balance[entry]" id="mycred-update-users-balance-entry" value="" autocomplete="on" /><br /><span class="description"><?php echo $req; ?></span></p>
 		<p class="row"><input type="button" name="mycred-update-users-balance-submit" id="mycred-update-users-balance-submit" value="<?php _e( 'Update Balance', 'mycred' ); ?>" class="button button-primary button-large" /></p>
 		<div class="clear"></div>
 	</div>
