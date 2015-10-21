@@ -7,6 +7,17 @@ jQuery(document).ready(function($){
       dateFormat: "yy-mm-dd",
     });
 
+  // Print fix
+  $('#site-logo a')
+    .attr('href' , '')
+    .replaceWith(function() {
+      var html = $(this).html();
+      return '<span>' + html + '</span>';
+    })
+    .on('click', function() {
+      window.location = location.protocol + '//' + location.host;
+    });
+
 	// Hide hour & min
 	$('td.column-time').text(function() {
 		var str = $(this).text();
