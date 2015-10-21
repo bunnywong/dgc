@@ -691,14 +691,14 @@ jQuery(function($) {
 	<thead>
 		<tr>';
 
-			// Table header
+			// Table header//
 			foreach ( $this->headers as $col_id => $col_title ) {
-				$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
+        if ($col_title == 'Entry') {
+          $col_title = 'Description';
+          $output .= '<th scope="col" class="manage-column ' . $col_id . '">Interest</th>';
+        }
 
-				// Append Interest Points column
-				if (strtolower($col_title) == 'points') {
-					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">Interest Points</th>';
-				}
+        $output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
 			}
 
 			$output .= '

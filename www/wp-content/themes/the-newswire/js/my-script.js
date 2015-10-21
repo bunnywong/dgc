@@ -28,7 +28,7 @@ jQuery(document).ready(function($){
 
 			// Is saving
 			if (points > 0 && interestPoints > 0) {
-				$(self).next().next('.interest-points').text(interestPoints);
+				// $(self).next().next('.interest-points').text(interestPoints);
 			}
 		} else {
 			// Server side render result
