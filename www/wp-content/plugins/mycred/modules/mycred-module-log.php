@@ -271,7 +271,7 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 			if ( empty( $row ) || $row === NULL )
 				wp_send_json_error( __( 'Log entry not found', 'mycred' ) );
 
-			// Update row ***
+			// Update row
 			$wpdb->update(
 				$this->core->log_table,
         array(
@@ -660,11 +660,11 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
       </p>
       <p class="row inline" style="width: 30%;">
         <label><strong><?php _e( 'Interest Points', 'mycred' ); ?>:</strong></label>
-        <input type="text" name="withdrawInterestPoints" class="js-interest-points" style="border: 1px solid lightcoral;" disabled="disabled" /><br />
+        <input type="text" name="withdrawInterestPoints" class="js-interest-points" /><br />
       </p>
       <p class="row inline" style="width: 30%;">
         <label><strong><?php _e( 'Withdraw Total', 'mycred' ); ?>:</strong></label>
-        <input type="text" name="withdrawTotal" class="js-withdraw-points-total" style="border: 1px solid lightcoral;" disabled="disabled" /><br />
+        <input type="text" name="withdrawTotal" class="js-withdraw-points-total" /><br />
       </p>
 
 
