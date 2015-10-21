@@ -403,7 +403,9 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 			// Row actions
 			$row = array();
 			$row['history'] = '<a href="' . admin_url( 'admin.php?page=' . $page . '&user_id=' . $user_id ) . '">' . __( 'History', 'mycred' ) . '</a>';
-			$row['adjust'] = '<a href="javascript:void(0)" class="mycred-open-points-editor" data-userid="' . $user_id . '" data-current="' . $ubalance . '" data-type="' . $column_name . '" data-username="' . $user->display_name . '"><br>- ' . __( 'New transaction', 'mycred' ) . '</a><br><a href="user-profile/?user_id='.$user_id.'" target="_blank">- User Profile</a>';
+			$row['adjust'] = '<a href="javascript:void(0)" class="mycred-open-points-editor" data-userid="' . $user_id . '" data-current="' . $ubalance . '" data-type="' . $column_name . '" data-username="' . $user->display_name . '"><br>- ' . __( 'New transaction', 'mycred' ) . '</a><br>';
+      $row['adjust'] .= '<a href="'.get_site_url().'?user_id='.$user_id.'" target="_blank">- User Summary</a><br>';
+      $row['adjust'] .= '<a href="user-profile/?user_id='.$user_id.'" target="_blank">- User Profile</a>';
 
 			$rows = apply_filters( 'mycred_user_row_actions', $row, $user_id, $mycred );
 			$balance .= $this->row_actions( $rows );
