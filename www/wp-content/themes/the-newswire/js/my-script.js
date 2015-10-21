@@ -1,5 +1,11 @@
 // this is bun.js
 jQuery(document).ready(function($){
+  // Data picker
+    $('.js-date-picker').datepicker({
+      showWeek: true,
+      firstDay: 1,
+      dateFormat: "yy-mm-dd",
+    });
 
 	// Hide hour & min
 	$('td.column-time').text(function() {

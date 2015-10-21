@@ -60,10 +60,23 @@ table.mycred-table tr.interest-row > td {
   padding: 10px;
 }
 
-@media print
-{
-  .no-print, .no-print *
-  {
-      display: none !important;
+/* Print Style */
+#um_form_printheader {
+  display: none;
+  background-color: transparent;
+  border: none;
+  padding: 0px;
+  margin: 0px;
+}
+#um_form_printheader input {
+  border: 0px;
+}
+@media print {
+  #um_form_printheader input#insert_user,
+  .no-print, .no-print * {
+    display: none !important;
+  }
+  #um_form_printheader {
+    display: block;
   }
 }
