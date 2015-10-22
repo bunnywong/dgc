@@ -19,6 +19,10 @@
 		echo '</pre>';
 	}
 
+  function load_admin_style() {
+    wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/css/my-admin-style.css', false, '1.0.1' );
+   }
+
 	// Import custom script
 	if ( ! function_exists( 'my_custom_scripts' ) ) :
 		function my_custom_scripts() {
@@ -28,6 +32,8 @@
 			wp_enqueue_script( 'newswire_custom_js', get_template_directory_uri() . '/library/js/scripts.js', array( 'moment', 'myScript' ), '1.0.0' );
 		}
 	endif;
+
+  add_action( 'admin_enqueue_scripts', 'load_admin_style' );
 	add_action('wp_enqueue_scripts', 'my_custom_scripts');
 
 /*
