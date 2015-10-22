@@ -403,9 +403,10 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 			// Row actions
 			$row = array();
 			$row['adjust'] = '<a href="javascript:void(0)" class="mycred-open-points-editor" data-userid="' . $user_id . '" data-current="' . $ubalance . '" data-type="' . $column_name . '" data-username="' . $user->display_name . '""><br>- ' . __( 'New transaction', 'mycred' ) . '</a><br>';
-      $row['adjust'] .= '<a href="'.get_site_url().'?user_id='.$user_id.'" target="_blank">- User Summary</a><br>';
-      $row['adjust'] .= '<a href="'.get_site_url().'/user-profile/?user_id='.$user_id.'" target="_blank">- User Profile</a><br>';
-      $row['adjust'] .= '<a href="'.get_site_url().'/wp-admin/admin.php?ref=manual&paged=1&s&page=myCRED&user='.$user_id.'" target="">- User Log (back-end)</a>';
+      $row['adjust'] .= '<a href="'.get_site_url().'/wp-admin/admin.php?ref=manual&paged=1&s&page=myCRED&user='.$user_id.'" target="">- User Log</a><br>';
+      $row['adjust'] .= '<a href="'.get_site_url().'?user_id='.$user_id.'" target="_blank">- User Summary (front-end)</a><br>';
+      $row['adjust'] .= '<a href="'.get_site_url().'/user-profile/?user_id='.$user_id.'" target="_blank">- User Profile (front-end)</a>';
+
 
 			$rows = apply_filters( 'mycred_user_row_actions', $row, $user_id, $mycred );
 			$balance .= $this->row_actions( $rows );
