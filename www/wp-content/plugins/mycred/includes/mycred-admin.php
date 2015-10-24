@@ -387,15 +387,18 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 			$user = get_userdata( $user_id );
 
 			// Show balance
-/*			$ubalance = $mycred->get_users_cred( $user_id, $column_name );
+			$ubalance = $mycred->get_users_cred( $user_id, $column_name );
 			$balance = '<div id="mycred-user-' . $user_id . '-balance-' . $column_name . '">' . $mycred->before . ' <span>' . $mycred->format_number( $ubalance ) . '</span> ' . $mycred->after . '</div>';
 
 			// Show total
 			$total = mycred_query_users_total( $user_id, $column_name );
 			$balance .= '<small style="display:block;">' . sprintf( '<strong>%s</strong>: %s', __( 'Total', 'mycred' ), $mycred->format_number( $total ) ) . '</small>';
 
+      // @Custom clean up balance info
+      $balance = '';
+
 			$balance = apply_filters( 'mycred_users_balance_column', $balance, $user_id, $column_name );
-*/
+
 			$page = 'myCRED';
 			if ( $column_name != 'mycred_default' )
 				$page .= '_' . $column_name;
