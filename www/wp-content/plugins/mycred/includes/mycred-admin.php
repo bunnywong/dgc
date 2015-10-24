@@ -755,11 +755,17 @@ jQuery(function($) {
 	<div class="mycred-adjustment-form">
 		<p class="row inline" style="width: 20%"><label><?php _e( 'ID', 'mycred' ); ?>:</label><span id="mycred-userid"></span></p>
 		<p class="row inline" style="width: 40%"><label><?php _e( 'User', 'mycred' ); ?>:</label><span id="mycred-username"></span></p>
-		<p class="row inline" style="width: 40%"><label><?php _e( 'Current Balance', 'mycred' ); ?>:</label> <span id="mycred-current"></span></p>
+
 		<div class="clear"></div>
 		<input type="hidden" name="mycred_update_users_balance[token]" id="mycred-update-users-balance-token" value="<?php echo wp_create_nonce( 'mycred-update-users-balance' ); ?>" />
 		<input type="hidden" name="mycred_update_users_balance[type]" id="mycred-update-users-balance-type" value="" />
 		<p class="row"><label for="mycred-update-users-balance-amount"><?php _e( 'Amount', 'mycred' ); ?>:</label><input type="text" name="mycred_update_users_balance[amount]" id="mycred-update-users-balance-amount" value="" /><br /><span class="description"><?php _e( 'A positive or negative value', 'mycred' ); ?>.</span></p>
+
+    <p class="row">
+      <label for="mycred-update-users-balance-amount"><?php _e( 'Create Date', 'mycred' ); ?>:</label><input type="text" name="createDate" class="js-date-picker" value="<?= date('Y-m-d'); ?>" /><br />
+    </p>
+
+
 		<p class="row"><label for="mycred-update-users-balance-entry"><?php _e( 'Log Entry', 'mycred' ); ?>:</label><input type="text" name="mycred_update_users_balance[entry]" id="mycred-update-users-balance-entry" value="" autocomplete="on" /><br /><span class="description"><?php echo $req; ?></span></p>
 		<p class="row"><input type="button" name="mycred-update-users-balance-submit" id="mycred-update-users-balance-submit" value="<?php _e( 'Update Balance', 'mycred' ); ?>" class="button button-primary button-large" /></p>
 		<div class="clear"></div>

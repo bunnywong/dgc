@@ -33,7 +33,14 @@ jQuery(function($) {
 				effect     : 'slide',
 				direction  : 'up',
 				duration   : 250
-			}
+			},
+      open : function( event, ui ) {
+        $('.js-date-picker').datepicker({
+          showWeek: true,
+          firstDay: 1,
+          dateFormat: "yy-mm-dd",
+        });
+      }
 		});
 	});
 
