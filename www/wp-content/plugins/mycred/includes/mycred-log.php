@@ -328,7 +328,7 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 		 * @version 1.0
 		 */
 		public function get_user_id( $string = '' ) {
-      if ($_GET['user_id'])
+      if ( isset($_GET['user_id']) && $_GET['user_id'] )
         return $_GET['user_id'];
 
 			if ( ! is_numeric( $string ) ) {
