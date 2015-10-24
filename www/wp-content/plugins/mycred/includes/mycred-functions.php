@@ -965,7 +965,7 @@ if ( ! class_exists( 'myCRED_Settings' ) ) :
 		public function add_creds( $ref = '', $user_id = '', $amount = '', $entry = '', $ref_id = '', $data = '', $type = 'mycred_default', $time = '' ) {
 
 			// Minimum Requirements: Reference not empty, User ID not empty and Amount is not empty
-			if ( empty( $ref ) || empty( $user_id ) || empty( $amount ) || empty($time) ) return false;
+			if ( empty( $ref ) || empty( $user_id ) || empty( $amount ) ) return false;
 
 			// Check exclusion
 			if ( $this->exclude_user( $user_id ) === true ) return false;
