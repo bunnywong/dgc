@@ -1,4 +1,3 @@
-// this is bun.js
 jQuery(document).ready(function($){
   // Data picker
     $('.js-date-picker').datepicker({
