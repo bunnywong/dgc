@@ -246,11 +246,11 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
       $new_entry = esc_attr(trim( $_POST['new_entry'] ));
 
       $time = esc_attr(trim( $_POST['time'] ));
-      $time = $this->custom_get_date($time);
+      $time = strtotime($time);
 
       if (isset($_POST['withdrawDate']) && $_POST['withdrawDate'] != '') {
         $withdraw_date = esc_attr(trim( $_POST['withdrawDate'] ));
-        $withdraw_date = $this->custom_get_date($withdraw_date);
+        $withdraw_date = strtotime($withdraw_date);
       } else {
         $withdraw_date = NULL;
       }
@@ -260,8 +260,6 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
       $withdraw_points_total    = esc_attr(trim( $_POST['withdrawPointsTotal'] ));
       $withdraw_entry           = esc_attr(trim( $_POST['withdrawEntry'] ));
       $withdraw_payment_status  = esc_attr(trim( $_POST['withdrawPaymentStatus'] ));
-      // @debug ***
-      // error_log('$_POST[withdraw_payment_status]: ' . $_POST['withdraw_payment_status']);
 
 			global $wpdb;
 
