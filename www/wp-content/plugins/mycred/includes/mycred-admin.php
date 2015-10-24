@@ -247,6 +247,9 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 			// Data
 			$data = apply_filters( 'mycred_manual_change', array( 'ref_type' => 'user' ), $this );
 
+      // Time
+      $time = strtotime($_POST['createDate']);
+
 			// Execute
 			$result = $mycred->add_creds(
 				'manual',
@@ -255,7 +258,8 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 				$entry,
 				$current_user,
 				$data,
-				$type
+				$type,
+        $time
 			);
 
 			if ( $result !== false )
@@ -765,7 +769,7 @@ jQuery(function($) {
 		<p class="row"><label for="mycred-update-users-balance-amount"><?php _e( 'Amount', 'mycred' ); ?>:</label><input type="text" name="mycred_update_users_balance[amount]" id="mycred-update-users-balance-amount" value="" /><br /><span class="description"><?php _e( 'A positive or negative value', 'mycred' ); ?>.</span></p>
 
     <p class="row">
-      <label for="mycred-update-users-balance-amount"><?php _e( 'Create Date', 'mycred' ); ?>:</label><input type="text" name="createDate" class="js-date-picker" value="<?= date('Y-m-d'); ?>" /><br />
+      <label for="mycred-update-users-balance-amount"><?php _e( 'Create Date', 'mycred' ); ?>:</label><input type="text" name="createDate" class="js-date-picker js-create-date" value="<?= date('Y-m-d'); ?>" /><br />
     </p>
 
 
