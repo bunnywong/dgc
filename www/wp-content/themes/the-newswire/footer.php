@@ -10,17 +10,16 @@
 
 			<?php echo __('&copy; ', 'newswire') . esc_attr( get_bloginfo( 'name', 'display' ) );  ?>
             <?php if ( is_front_page() && ! is_paged() ) : ?>
-            <?php //_e('- Powered by ', 'newswire'); ?><a href="<?php echo esc_url( __( 'http://wordpress.org/', 'newswire' ) ); ?>" title="<?php esc_attr_e( 'Semantic Personal Publishing Platform', 'newswire' ); ?>"><?php _e('WordPress' ,'newswire'); ?></a>
+              <br>
+            <span class="no-print"><?php _e('Powered by ', 'newswire'); ?><a href="<?php echo esc_url( __( 'http://wordpress.org/', 'newswire' ) ); ?>" title="<?php esc_attr_e( 'Semantic Personal Publishing Platform', 'newswire' ); ?>"><?php _e('WordPress' ,'newswire'); ?></a>
 			<?php _e(' and ', 'newswire'); ?><a href="<?php echo esc_url( __( 'http://wpdevshed.com/', 'newswire' ) ); ?>"><?php _e('WP Dev Shed', 'newswire'); ?></a>
+            </span>
             <?php endif; ?>
 
 		</div>
 	</footer><!-- #colophon -->
 
 <?php wp_footer(); ?>
-
-<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
-</script>
 
 </body>
 </html>

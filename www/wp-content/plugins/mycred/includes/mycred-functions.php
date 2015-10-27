@@ -962,7 +962,7 @@ if ( ! class_exists( 'myCRED_Settings' ) ) :
 		 * @since 0.1
 		 * @version 1.6
 		 */
-		public function add_creds( $ref = '', $user_id = '', $amount = '', $entry = '', $ref_id = '', $data = '', $type = 'mycred_default' ) {
+		public function add_creds( $ref = '', $user_id = '', $amount = '', $entry = '', $ref_id = '', $data = '', $type = 'mycred_default', $time = '' ) {
 
 			// Minimum Requirements: Reference not empty, User ID not empty and Amount is not empty
 			if ( empty( $ref ) || empty( $user_id ) || empty( $amount ) ) return false;
@@ -991,7 +991,7 @@ if ( ! class_exists( 'myCRED_Settings' ) ) :
 			if ( $execute === true ) {
 
 				// Allow the adjustment of the values before we run them
-				$run_this = apply_filters( 'mycred_run_this', compact( 'ref', 'user_id', 'amount', 'entry', 'ref_id', 'data', 'type' ), $this );
+				$run_this = apply_filters( 'mycred_run_this', compact( 'ref', 'user_id', 'amount', 'entry', 'ref_id', 'data', 'type', 'time' ), $this );
 
 				// Add to log
 				$this->add_to_log(
@@ -1001,7 +1001,8 @@ if ( ! class_exists( 'myCRED_Settings' ) ) :
 					$run_this['entry'],
 					$run_this['ref_id'],
 					$run_this['data'],
-					$run_this['type']
+          $run_this['type'],
+					$run_this['time']
 				);
 
 				// Update balance
@@ -1026,10 +1027,10 @@ if ( ! class_exists( 'myCRED_Settings' ) ) :
 		 * @returns boolean true on success or false on fail
 		 * @version 1.1
 		 */
-		public function add_to_log( $ref = '', $user_id = '', $amount = '', $entry = '', $ref_id = '', $data = '', $type = 'mycred_default' ) {
+		public function add_to_log( $ref = '', $user_id = '', $amount = '', $entry = '', $ref_id = '', $data = '', $type = 'mycred_default', $time = '' ) {
 
 			// Minimum Requirements: Reference not empty, User ID not empty and Amount is not empty
-			if ( empty( $ref ) || empty( $user_id ) || empty( $amount ) || empty( $entry ) ) return false;
+			if ( empty( $ref ) || empty( $user_id ) || empty( $amount ) ) return false;
 
 			// Amount can not be zero!
 			if ( $amount == $this->zero() || $amount == 0 ) return false;
@@ -1055,7 +1056,8 @@ if ( ! class_exists( 'myCRED_Settings' ) ) :
 			else
 				$format = '%s';
 
-			$time = apply_filters( 'mycred_log_time', date_i18n( 'U' ), $ref, $user_id, $amount, $entry, $ref_id, $data, $type );
+      if ($time == '')
+        $time = apply_filters( 'mycred_log_time', date_i18n( 'U' ), $ref, $user_id, $amount, $entry, $ref_id, $data, $type );
 
 			// Insert into DB
 			$new_entry = $wpdb->insert(

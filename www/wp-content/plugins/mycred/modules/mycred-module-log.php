@@ -63,7 +63,10 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 		public function module_admin_init() {
 
 			add_action( 'wp_ajax_mycred-delete-log-entry', array( $this, 'action_delete_log_entry' ) );
-			add_action( 'wp_ajax_mycred-update-log-entry', array( $this, 'action_update_log_entry' ) );
+      add_action( 'wp_ajax_mycred-update-log-entry', array( $this, 'action_update_log_entry' ) );
+
+      // My Custom
+			add_action( 'wp_ajax_mycred-last-log-entry', array( $this, 'action_update_log_entry' ) );
 
 		}
 
@@ -215,12 +218,21 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 
 		}
 
+    /**
+     * Custom function
+     * Get date from timestamp
+     */
+    public function custom_get_date($timestamp) {
+      $time = DateTime::createFromFormat('Y-m-d', $timestamp);
+      return $time->getTimestamp();
+    }
+
 		/**
 		 * Update Log Entry Action
 		 * @since 1.4
 		 * @version 1.0
 		 */
-		public function action_update_log_entry() {
+    public function action_update_log_entry() {
 
 			// Security
 			check_ajax_referer( 'mycred-update-log-entry', 'token' );
@@ -230,12 +242,28 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 				wp_send_json_error(  __( 'Access denied for this action', 'mycred' ) );
 
 			// Get new entry
-			$new_entry = trim( $_POST['new_entry'] );
-			$new_entry = esc_attr( $new_entry );
+      $credit = esc_attr(trim( $_POST['credit'] ));
+      $new_entry = esc_attr(trim( $_POST['new_entry'] ));
+
+      $time = esc_attr(trim( $_POST['time'] ));
+      $time = strtotime($time);
+
+      if (isset($_POST['withdrawDate']) && $_POST['withdrawDate'] != '') {
+        $withdraw_date = esc_attr(trim( $_POST['withdrawDate'] ));
+        $withdraw_date = strtotime($withdraw_date);
+      } else {
+        $withdraw_date = NULL;
+      }
+
+      $withdraw_interest_rate   = esc_attr(trim( $_POST['withdrawInterestRate'] ));
+      $withdraw_interest_points = esc_attr(trim( $_POST['withdrawInterestPoints'] ));
+      $withdraw_points_total    = esc_attr(trim( $_POST['withdrawPointsTotal'] ));
+      $withdraw_entry           = esc_attr(trim( $_POST['withdrawEntry'] ));
+      $withdraw_payment_status  = esc_attr(trim( $_POST['withdrawPaymentStatus'] ));
 
 			global $wpdb;
 
-			// Get row
+			// Get row from `wp_myCRED_log` table
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->core->log_table} WHERE id = %d;", absint( $_POST['row'] ) ) );
 
 			// If row is not found
@@ -245,7 +273,16 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 			// Update row
 			$wpdb->update(
 				$this->core->log_table,
-				array( 'entry' => $new_entry ),
+        array(
+          'entry' => $new_entry,
+          'time' => $time,
+          'creds' => $credit,
+          'withdraw_time' => $withdraw_date,
+          'withdraw_points_interest' => $withdraw_interest_points,
+          'withdraw_points_total' => $withdraw_points_total,
+          'withdraw_entry' => $withdraw_entry,
+          'withdraw_payment_status' => $withdraw_payment_status,
+          ),
 				array( 'id' => $row->id ),
 				array( '%s' ),
 				array( '%d' )
@@ -256,7 +293,9 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 				'label'         => __( 'Entry Updated' ),
 				'row_id'        => $row->id,
 				'new_entry_raw' => $new_entry,
-				'new_entry'     => $this->core->parse_template_tags( $new_entry, $row )
+				'new_entry'     => $this->core->parse_template_tags( $new_entry, $row ),
+        'new_time' => gmdate("Y-m-d", $time),
+        'new_credit' => $credit,
 			) );
 
 		}
@@ -510,7 +549,13 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 					else
 						$class = '';
 
-					echo '<tr class="myCRED-log-row' . $class . '" id="mycred-log-entry-' . $log_entry->id . '">';
+					echo '<tr class="myCRED-log-row js-data-row' . $class . '" id="mycred-log-entry-' . $log_entry->id . '"';
+          echo ' data-withdraw-time="'.$log_entry->withdraw_time . '"';
+          echo ' data-withdraw-points-interest="'.$log_entry->withdraw_points_interest . '"';
+          echo ' data-withdraw-points-total="'.$log_entry->withdraw_points_total . '"';
+          echo ' data-withdraw-entry="'.$log_entry->withdraw_entry . '"';
+          echo ' data-withdraw-payment-status="'.$log_entry->withdraw_payment_status . '"';
+          echo '">';
 
 					// Run though columns
 					foreach ( $log->headers as $column_id => $column_name ) {
@@ -525,7 +570,7 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 								$user = get_userdata( $log_entry->user_id );
 								if ( $user === false )
 									$content = '<span>' . __( 'User Missing', 'mycred' ) . ' (ID: ' . $log_entry->user_id . ')</span>';
-								else 
+								else
 									$content = '<span>' . $user->display_name . '</span>';
 
 								if ( $user !== false && $this->core->can_edit_creds() )
@@ -607,10 +652,70 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 	<?php do_action( 'mycred_bottom_log_page', $this ); ?>
 
 	<div id="edit-mycred-log-entry" style="display: none;">
-		<div class="mycred-adjustment-form">
-			<p class="row inline" style="width: 40%;"><label><?php _e( 'User', 'mycred' ); ?>:</label><span id="mycred-username"></span></p>
-			<p class="row inline" style="width: 40%;"><label><?php _e( 'Time', 'mycred' ); ?>:</label> <span id="mycred-time"></span></p>
-			<p class="row inline" style="width: 20%;"><label><?php echo $this->core->plural(); ?>:</label> <span id="mycred-creds"></span></p>
+		<div class="mycred-adjustment-form js-mycred-adjustment-form">
+      <h3><?php _e( 'Withdraw:', 'mycred' ); ?></h3>
+
+      <p class="row inline" style="width: 30%;">
+        <label><strong><?php _e( 'Interest rate' ); ?> %: </strong></label>
+        <input type="number" name="withdrawInterestRate" class="js-interest-rate" value="<?php echo round((float)WP_INTEREST_RATE * 100 ); ?>" min="1" max="100" /><br />
+      </p>
+      <p class="row inline" style="width: 30%;">
+        <label><strong><?php _e( 'Interest Points', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="withdrawInterestPoints" class="js-interest-points" /><br />
+      </p>
+      <p class="row inline" style="width: 30%;">
+        <label><strong><?php _e( 'Withdraw Total', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="withdrawTotal" class="js-withdraw-points-total" /><br />
+      </p>
+
+
+      <p class="row" style="width: 50%;">
+        <label><strong><?php _e( 'Withdraw Date', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="withdrawDate" class="js-date-picker js-withdraw-date" tabindex="2" /><br />
+      </p>
+
+      <p class="row">
+        <label><strong><?php _e( 'Withdraw Log Entry', 'mycred' ); ?>:</strong></label>
+        <input type="text" name="withdrawEntry" class="js-withdraw-entry" tabindex="1" /><br />
+      </p>
+
+      <p class="row">
+        <label><strong><?php _e( 'Payment Status', 'mycred' ); ?>:</strong></label>
+        <label style="display: inline-block; margin-right: 10px;">
+          <input type="radio" name="paymentStatus" class="js-withdraw-payment-status none" value="null" />none
+        </label>
+        <label style="display: inline-block; margin-right: 10px;">
+          <input type="radio" name="paymentStatus" class="js-withdraw-payment-status cash" value="cash" />cash
+        </label>
+        <label style="display: inline-block; margin-right: 10px;">
+          <input type="radio" name="paymentStatus" class="js-withdraw-payment-status cheque" value="cheque" />check
+        </label>
+        <label style="display: inline-block; margin-right: 10px;">
+          <input type="radio" name="paymentStatus" class="js-withdraw-payment-status bank" value="bank" />bank in
+        </label>
+        <br />
+      </p>
+
+      <div class="clear" style="border: 1px solid lightgray; margin-top: 20px; display: block; "></div>
+
+      <h3><?php _e( 'Adjustment:', 'mycred' ); ?></h3>
+
+			<p class="row inline" style="width: 30%;"><label><?php _e( 'User', 'mycred' ); ?>:</label><span id="mycred-username"></span></p>
+
+      <p class="row inline" style="width: 30%;"><label><?php echo $this->core->plural(); ?>:</label>
+      <!--
+        <span id="mycred-creds"></span>
+      -->
+        <input type="text" name="mycred-creds" class="js-mycred-creds" value="" />
+      </p>
+
+      <p class="row inline" style="width: 30%;"><label><?php _e( 'Date', 'mycred' ); ?>:</label>
+      <!--
+        <span id="mycred-time"></span>
+      -->
+        <input type="text" name="mycred-date" class="js-mycred-date js-date-picker" value="" />
+      </p>
+
 			<div class="clear"></div>
 			<p class="row">
 				<label for="mycred-update-users-balance-amount"><?php _e( 'Current Log Entry', 'mycred' ); ?>:</label>
@@ -619,7 +724,7 @@ if ( ! class_exists( 'myCRED_Log_Module' ) ) :
 			</p>
 			<p class="row">
 				<label for="mycred-update-users-balance-entry"><?php _e( 'Adjust Log Entry', 'mycred' ); ?>:</label>
-				<input type="text" name="mycred-new-entry" id="mycred-new-entry" value="" /><br />
+				<input type="text" name="mycred-new-entry" id="mycred-new-entry" value=""  autocomplete="on" /><br />
 				<span class="description"><?php _e( 'The new log entry', 'mycred' ); ?>.</span>
 			</p>
 			<p class="row">

@@ -1,5 +1,21 @@
-// this is bun.js
 jQuery(document).ready(function($){
+  // Data picker
+    $('.js-date-picker').datepicker({
+      showWeek: true,
+      firstDay: 1,
+      dateFormat: "yy-mm-dd",
+    });
+
+  // Print fix
+  $('#site-logo a')
+    .attr('href' , '')
+    .replaceWith(function() {
+      var html = $(this).html();
+      return '<span>' + html + '</span>';
+    })
+    .on('click', function() {
+      window.location = location.protocol + '//' + location.host;
+    });
 
 	// Hide hour & min
 	$('td.column-time').text(function() {
@@ -28,7 +44,7 @@ jQuery(document).ready(function($){
 
 			// Is saving
 			if (points > 0 && interestPoints > 0) {
-				$(self).next().next('.interest-points').text(interestPoints);
+				// $(self).next().next('.interest-points').text(interestPoints);
 			}
 		} else {
 			// Server side render result
@@ -52,5 +68,5 @@ jQuery(document).ready(function($){
 	}
 	sum = Math.round(sum * 100) / 100;
 	var html = '<strong>' + sum + '</strong>';
-	$("p:contains('My total interest points')" ).append(html)
+	$("p:contains('My total interest points')" ).append(' ' + html)
 });

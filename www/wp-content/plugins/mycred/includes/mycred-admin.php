@@ -247,6 +247,9 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 			// Data
 			$data = apply_filters( 'mycred_manual_change', array( 'ref_type' => 'user' ), $this );
 
+      // Time
+      $time = strtotime($_POST['createDate']);
+
 			// Execute
 			$result = $mycred->add_creds(
 				'manual',
@@ -255,7 +258,8 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 				$entry,
 				$current_user,
 				$data,
-				$type
+				$type,
+        $time
 			);
 
 			if ( $result !== false )
@@ -394,6 +398,9 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 			$total = mycred_query_users_total( $user_id, $column_name );
 			$balance .= '<small style="display:block;">' . sprintf( '<strong>%s</strong>: %s', __( 'Total', 'mycred' ), $mycred->format_number( $total ) ) . '</small>';
 
+      // @Custom clean up balance info
+      $balance = '';
+
 			$balance = apply_filters( 'mycred_users_balance_column', $balance, $user_id, $column_name );
 
 			$page = 'myCRED';
@@ -402,8 +409,11 @@ if ( ! class_exists( 'myCRED_Admin' ) ) {
 
 			// Row actions
 			$row = array();
-			$row['history'] = '<a href="' . admin_url( 'admin.php?page=' . $page . '&user_id=' . $user_id ) . '">' . __( 'History', 'mycred' ) . '</a>';
-			$row['adjust'] = '<a href="javascript:void(0)" class="mycred-open-points-editor" data-userid="' . $user_id . '" data-current="' . $ubalance . '" data-type="' . $column_name . '" data-username="' . $user->display_name . '">' . __( 'Adjust', 'mycred' ) . '</a>';
+			$row['adjust'] = '<a href="javascript:void(0)" class="mycred-open-points-editor" data-userid="' . $user_id . '" data-current="' . $ubalance . '" data-type="' . $column_name . '" data-username="' . $user->display_name . '""><br>- ' . __( 'New transaction', 'mycred' ) . '</a><br>';
+      $row['adjust'] .= '<a href="'.get_site_url().'/wp-admin/admin.php?ref=manual&paged=1&s&page=myCRED&user='.$user_id.'" target="">- User Log</a><br>';
+      $row['adjust'] .= '<a href="'.get_site_url().'?user_id='.$user_id.'" target="_blank">- User Summary (front-end)</a><br>';
+      $row['adjust'] .= '<a href="'.get_site_url().'/user-profile/?user_id='.$user_id.'" target="_blank">- User Profile (front-end)</a>';
+
 
 			$rows = apply_filters( 'mycred_user_row_actions', $row, $user_id, $mycred );
 			$balance .= $this->row_actions( $rows );
@@ -752,12 +762,18 @@ jQuery(function($) {
 	<div class="mycred-adjustment-form">
 		<p class="row inline" style="width: 20%"><label><?php _e( 'ID', 'mycred' ); ?>:</label><span id="mycred-userid"></span></p>
 		<p class="row inline" style="width: 40%"><label><?php _e( 'User', 'mycred' ); ?>:</label><span id="mycred-username"></span></p>
-		<p class="row inline" style="width: 40%"><label><?php _e( 'Current Balance', 'mycred' ); ?>:</label> <span id="mycred-current"></span></p>
+
 		<div class="clear"></div>
 		<input type="hidden" name="mycred_update_users_balance[token]" id="mycred-update-users-balance-token" value="<?php echo wp_create_nonce( 'mycred-update-users-balance' ); ?>" />
 		<input type="hidden" name="mycred_update_users_balance[type]" id="mycred-update-users-balance-type" value="" />
 		<p class="row"><label for="mycred-update-users-balance-amount"><?php _e( 'Amount', 'mycred' ); ?>:</label><input type="text" name="mycred_update_users_balance[amount]" id="mycred-update-users-balance-amount" value="" /><br /><span class="description"><?php _e( 'A positive or negative value', 'mycred' ); ?>.</span></p>
-		<p class="row"><label for="mycred-update-users-balance-entry"><?php _e( 'Log Entry', 'mycred' ); ?>:</label><input type="text" name="mycred_update_users_balance[entry]" id="mycred-update-users-balance-entry" value="" /><br /><span class="description"><?php echo $req; ?></span></p>
+
+    <p class="row">
+      <label for="mycred-update-users-balance-amount"><?php _e( 'Create Date', 'mycred' ); ?>:</label><input type="text" name="createDate" class="js-date-picker js-create-date" value="<?= date('Y-m-d'); ?>" /><br />
+    </p>
+
+
+		<p class="row"><label for="mycred-update-users-balance-entry"><?php _e( 'Log Entry', 'mycred' ); ?>:</label><input type="text" name="mycred_update_users_balance[entry]" id="mycred-update-users-balance-entry" value="" autocomplete="on" /><br /><span class="description"><?php echo $req; ?></span></p>
 		<p class="row"><input type="button" name="mycred-update-users-balance-submit" id="mycred-update-users-balance-submit" value="<?php _e( 'Update Balance', 'mycred' ); ?>" class="button button-primary button-large" /></p>
 		<div class="clear"></div>
 	</div>

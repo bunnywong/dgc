@@ -33,7 +33,14 @@ jQuery(function($) {
 				effect     : 'slide',
 				direction  : 'up',
 				duration   : 250
-			}
+			},
+      open : function( event, ui ) {
+        $('.js-date-picker').datepicker({
+          showWeek: true,
+          firstDay: 1,
+          dateFormat: "yy-mm-dd",
+        });
+      }
 		});
 	});
 
@@ -57,23 +64,25 @@ jQuery(function($) {
 	 * Update Balance AJAX Caller
 	 */
 	$( '#mycred-update-users-balance-submit' ).click( function() {
-		var button = $(this);
-		var label = button.val();
-		var current_el = $( '#edit-mycred-balance #mycred-current' );
-		var user_id = $( '#edit-mycred-balance #mycred-userid' ).text();
-		var amount_el = $( 'input#mycred-update-users-balance-amount' );
-		var entry_el = $( 'input#mycred-update-users-balance-entry' );
-		var type_el = $( '#mycred-update-users-balance-type' );
-		
+    var button        = $(this);
+    var label         = button.val();
+    var current_el    = $( '#edit-mycred-balance #mycred-current' );
+    var user_id       = $( '#edit-mycred-balance #mycred-userid' ).text();
+    var amount_el     = $( 'input#mycred-update-users-balance-amount' );
+    var entry_el      = $( 'input#mycred-update-users-balance-entry' );
+    var type_el       = $( '#mycred-update-users-balance-type' );
+    var createDate_el = $( '.js-create-date' );
+
 		$.ajax({
 			type       : "POST",
 			data       : {
-				action    : 'mycred-inline-edit-users-balance',
-				token     : $( 'input#mycred-update-users-balance-token' ).val(),
-				user      : user_id,
-				amount    : amount_el.val(),
-				entry     : entry_el.val(),
-				type      : type_el.val()
+        action     : 'mycred-inline-edit-users-balance',
+        token      : $( 'input#mycred-update-users-balance-token' ).val(),
+        user       : user_id,
+        amount     : amount_el.val(),
+        entry      : entry_el.val(),
+        type       : type_el.val(),
+        createDate : createDate_el.val()
 			},
 			dataType   : "JSON",
 			url        : myCREDedit.ajaxurl,

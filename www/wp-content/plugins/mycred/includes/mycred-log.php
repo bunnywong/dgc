@@ -328,6 +328,8 @@ if ( ! class_exists( 'myCRED_Query_Log' ) ) :
 		 * @version 1.0
 		 */
 		public function get_user_id( $string = '' ) {
+      if ( isset($_GET['user_id']) && $_GET['user_id'] )
+        return $_GET['user_id'];
 
 			if ( ! is_numeric( $string ) ) {
 
@@ -675,7 +677,16 @@ jQuery(function($) {
 		 * @version 1.0
 		 */
 		public function display() {
+      global $my_total_interest_points;
+      global $my_total_points;
+      $my_total_interest_points = $my_total_points = 0;
+
 			echo $this->get_display();
+      echo '<div class="my-total">';
+      echo '<span class="text-total"><strong>Your Total interest Points:</strong></span><span class="total-points">' . $my_total_interest_points . '</span>';
+      echo '<div class="clear hr block"></div>';
+      echo '<span class="text-total"><strong>Your Total Principal:</strong></span><span class="total-points">'. $my_total_points . '</span>';
+      echo '</div>';
 		}
 
 		/**
@@ -691,14 +702,14 @@ jQuery(function($) {
 	<thead>
 		<tr>';
 
-			// Table header
+			// Table header//
 			foreach ( $this->headers as $col_id => $col_title ) {
-				$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
+        if ($col_title == 'Entry') {
+          $col_title = 'Description';
+          $output .= '<th scope="col" class="manage-column ' . $col_id . '">Interest</th>';
+        }
 
-				// Append Interest Points column
-				if (strtolower($col_title) == 'points') {
-					$output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">Interest Points</th>';
-				}
+        $output .= '<th scope="col" id="' . str_replace( 'column-', '', $col_id ) . '" class="manage-column ' . $col_id . '">' . $col_title . '</th>';
 			}
 
 			$output .= '
@@ -719,9 +730,36 @@ jQuery(function($) {
 					if ( $alt % 2 == 0 )
 						$row_class[] = ' alt';
 
-					$output .= '<tr class="' . implode( ' ', $row_class ) . '">';
+          $output .= '<tr class="' . implode( ' ', $row_class ) . '">';
 					$output .= $this->get_the_entry( $log_entry );
-					$output .= '</tr>';
+          $output .= '</tr>';
+
+
+          $status = $log_entry->withdraw_payment_status;
+
+           // Points in bank
+          if ($status == 'null' || $status == '') {
+            global $my_total_points;
+            $my_total_points +=  $log_entry->creds;
+          }
+
+          // Show withdraw depend on with draw time value
+          if ($log_entry->withdraw_time != 0) {
+            if ($status == 'null') { // Points in bank ***
+              global $my_total_interest_points;
+              $my_total_interest_points += $log_entry->withdraw_points_interest;
+              $status = '';
+            } else {
+              $status = '<span class="tag-payment-status">Paid by ' . $status . '</span> ';
+            }
+
+            $output .= '<tr class="interest-row">';
+            $output .=   '<td>'.date('Y-m-d', $log_entry->withdraw_time).'</td>';
+            $output .= '<td></td>';
+            $output .=   '<td>'.$log_entry->withdraw_points_interest.'</td>';
+            $output .=   '<td>'.$status . $log_entry->withdraw_entry.'</td>';
+            $output .= '</tr>';
+          }
 				}
 				$output .= implode('', $arr);
 			}
@@ -775,43 +813,40 @@ jQuery(function($) {
 					break;
 					// Date & Time Column
 					case 'column-time' :
-
-						$content = $time = apply_filters( 'mycred_log_date', date_i18n( $date_format, $log_entry->time ), $log_entry->time, $log_entry );
+						$content = $time = apply_filters( 'mycred_log_date', date_i18n( $date_format, $log_entry->time ), $log_entry->time, $log_entry ); // Overrided
+            $content = date('Y-m-d', $log_entry->time);
 						$timestamp  = $log_entry->time;
 
 					break;
+
 					// Amount Column
 					case 'column-creds' :
-
 						$content = $creds = $this->core->format_creds( $log_entry->creds );
 						$content = apply_filters( 'mycred_log_creds', $content, $log_entry->creds, $log_entry );
-
 					break;
-					// Log Entry Column
-					case 'column-entry' :
 
-						$content = '<div class="mycred-mobile-log" style="display:none;">' . $time . '<div>' . $creds . '</div></div>';
-						$content .= $this->core->parse_template_tags( $log_entry->entry, $log_entry );
-						$content = apply_filters( 'mycred_log_entry', $content, $log_entry->entry, $log_entry );
+          // Log Entry Column
+          case 'column-entry' :
+            $content = '<div class="mycred-mobile-log" style="display:none;">' . $time . '<div>' . $creds . '</div></div>';
+            $content .= $this->core->parse_template_tags( $log_entry->entry, $log_entry );
+            $content = apply_filters( 'mycred_log_entry', $content, $log_entry->entry, $log_entry );
+          break;
 
-					break;
 					// Let others play
 					default :
-
 						$content = apply_filters( 'mycred_log_' . $column_id, '', $log_entry );
-
 					break;
 				}
 
 				$timestamp == '' ? $data_time = '' : $data_time = 'data-timestamp="'.$timestamp.'"';
 
-				$entry_data .= '<' . $wrap . ' class="' . $column_id . '" '.$data_time.'>' . $content . '</' . $wrap . '>';
+        $entry_data .= '<' . $wrap . ' class="' . $column_id . '" '.$data_time.'>' . $content . '</' . $wrap . '>';
 
 				// Append Interest Points column
 				if (strtolower($column_name) == 'points') {
 					$entry_data .= '<' . $wrap . ' class="interest-points"></' . $wrap . '>';
 				}
-			}
+			}// !foreach
 			return $entry_data;
 		}
 

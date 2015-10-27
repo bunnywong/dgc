@@ -122,13 +122,73 @@ jQuery(function($) {
 		username_el.empty();
 		username_el.text( log_user );
 
-		var time_el = $( '#edit-mycred-log-entry #mycred-time' );
-		time_el.empty();
-		time_el.text( log_time );
+		// ==================================================
+    /* My Custom JS
+     * Override date & creds
+    */
 
-		var creds_el = $( '#edit-mycred-log-entry #mycred-creds' );
-		creds_el.empty();
-		creds_el.text( log_cred );
+    var time_input_el = $( '#edit-mycred-log-entry .js-mycred-date' );
+  	var log_date = log_time;
+    log_date = log_date.substring(0, (log_date.length - 8));
+
+    // Init date
+    function zeroPad(i) {
+      return (i < 10 ? '0' : '') + i
+    }
+    var log_date = new Date(log_date);
+    var year = log_date.getFullYear();
+    var month = zeroPad(log_date.getMonth() + 1);
+    var date = zeroPad(log_date.getDate());
+
+    time_input_el.val( year + '-' + month + '-' + date );
+
+    // Data picker
+    $('.js-date-picker').datepicker({
+      showWeek: true,
+      firstDay: 1,
+      dateFormat: "yy-mm-dd",
+    });
+
+		// Init Credit
+    var creds_el = $( '#edit-mycred-log-entry .js-mycred-creds' );
+    creds_el.val( log_cred );
+
+// ================================================================================
+  // @Edit Log Entry
+  // Insert custom value when dialog pop up
+
+  var withdrawTime           = $(this).parent().parent('.js-data-row').data('withdraw-time');
+  var withdrawPointsInterest = $(this).parent().parent('.js-data-row').data('withdraw-points-interest');
+  var withdrawPointsTotal    = $(this).parent().parent('.js-data-row').data('withdraw-points-total');
+  var withdrawEntry          = $(this).parent().parent('.js-data-row').data('withdraw-entry');
+  var withdrawPaymentStatus  = $(this).parent().parent('.js-data-row').data('withdraw-payment-status');
+
+console.log('withdrawPaymentStatus: (' + withdrawPaymentStatus + ')');
+
+  // Display interest data depend on interest date
+  if (withdrawTime == 0) {
+    withdrawTime = '';
+  } else {
+    withdrawTime = moment.unix(withdrawTime).format('YYYY-MM-DD');
+  }
+
+  if (withdrawPointsInterest == 0)
+    withdrawPointsInterest = '';
+
+  if (withdrawPointsTotal == 0)
+    withdrawPointsTotal = '';
+
+  $('.js-withdraw-date').val(withdrawTime);
+  $('.js-interest-points').val(withdrawPointsInterest);
+  $('.js-withdraw-points-total').val(withdrawPointsTotal);
+  $('.js-withdraw-entry').val(withdrawEntry);
+  if (withdrawPaymentStatus == null || withdrawPaymentStatus == '' ) {
+    $('.js-withdraw-payment-status.none').prop('checked', 'checked');
+  } else {
+    $('.js-withdraw-payment-status.' + withdrawPaymentStatus).prop('checked', 'checked');
+  }
+
+// ================================================================================
 
 		var entry_el = $( '#edit-mycred-log-entry #mycred-raw-entry' );
 		entry_el.val( '' );
@@ -137,7 +197,7 @@ jQuery(function($) {
 		var raw_entry_el = $( '#edit-mycred-log-entry #mycred-new-entry' );
 		raw_entry_el.val( '' );
 		raw_entry_el.val( log_entry_raw );
-		
+
 		$( 'input#mycred-log-row-id' ).val( log_row_id );
 
 	});
@@ -145,39 +205,53 @@ jQuery(function($) {
 	/**
 	 * Edit AJAX Call
 	 */
-	var mycred_update_log_entry = function( rowid, entry, button ) {
+	var mycred_update_log_entry = function( rowid, formData, button ) {
 		var button_label = button.val();
 
 		$.ajax({
 			type       : "POST",
 			data       : {
-				action    : 'mycred-update-log-entry',
-				token     : myCREDLog.tokens.update_row,
-				row       : rowid,
-				new_entry : entry
+        action                 : 'mycred-update-log-entry',
+        token                  : myCREDLog.tokens.update_row,
+        row                    : rowid,
+        new_entry              : formData.entry,
+        credit                 : formData.credit,
+        time                   : formData.time,
+        withdrawDate           : formData.withdrawDate,
+        withdrawInterestRate   : formData.withdrawInterestRate,
+        withdrawInterestPoints : formData.withdrawInterestPoints,
+        withdrawPointsTotal    : formData.withdrawPointsTotal,
+        withdrawEntry          : formData.withdrawEntry,
+        withdrawPaymentStatus  : formData.withdrawPaymentStatus,
 			},
 			dataType   : "JSON",
 			url        : myCREDLog.ajaxurl,
 			beforeSend : function() {
-			
 				button.removeClass( 'button-primary' );
 				button.addClass( 'button-secondary' );
 				button.val( myCREDLog.working );
 			},
 			success    : function( response ) {
 				// Debug
-				console.log( response );
+				// console.log( response );
+        console.log(response.data);
 
 				var effected_row = $( '#mycred-log-entry-' + response.data.row_id );
 				button.removeClass( 'button-secondary' );
 
 				if ( response.success ) {
+
 					effected_row.addClass( 'updated-row' );
 					effected_row.children( 'td.column-entry' ).children( 'div.raw' ).empty().html( response.data.new_entry_raw );
 
 					$( '#edit-mycred-log-entry #mycred-raw-entry' ).val( response.data.new_entry );
 
-					effected_row.children( 'td.column-entry' ).children( 'div.entry' ).empty().html( response.data.new_entry );
+					effected_row
+            .children( 'td.column-entry' )
+            .children( 'div.entry' ).empty().html( response.data.new_entry );
+          effected_row
+            .children( 'td.column-time' ).text(response.data.new_time);
+
 
 					$( '#edit-mycred-log-entry #mycred-new-entry' ).val( response.data.new_entry_raw );
 
@@ -201,7 +275,19 @@ jQuery(function($) {
 	 * Edit AJAX Call Trigger
 	 */
 	$( '#mycred-update-log-entry' ).click( function() {
-		mycred_update_log_entry( $(this).next().val(), $( 'input#mycred-new-entry' ).val(), $(this) );
+    var data = {
+      credit                 : $( 'input.js-mycred-creds' ).val(),
+      time                   : $( 'input.js-mycred-date' ).val(),
+      entry                  : $( 'input#mycred-new-entry' ).val(),
+      withdrawDate           : $( 'input.js-withdraw-date' ).val(),
+      withdrawInterestRate   : $( 'input.js-interest-rate' ).val(),
+      withdrawInterestPoints : $( 'input.js-interest-points' ).val(),
+      withdrawPointsTotal    : $( 'input.js-withdraw-points-total' ).val(),
+      withdrawEntry          : $( 'input.js-withdraw-entry' ).val(),
+      withdrawPaymentStatus  : $( 'input.js-withdraw-payment-status:checked' ).val(),
+    }
+    console.log('data:' + data);
+		mycred_update_log_entry( $(this).next().val(), data, $(this) );
 	});
 
 	/* global setUserSetting, ajaxurl, commonL10n, alert, confirm, toggleWithKeyboard, pagenow */

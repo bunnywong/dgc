@@ -19,6 +19,10 @@
 		echo '</pre>';
 	}
 
+  function load_admin_style() {
+    wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/css/my-admin-style.css', false, '1.0.1' );
+   }
+
 	// Import custom script
 	if ( ! function_exists( 'my_custom_scripts' ) ) :
 		function my_custom_scripts() {
@@ -28,6 +32,8 @@
 			wp_enqueue_script( 'newswire_custom_js', get_template_directory_uri() . '/library/js/scripts.js', array( 'moment', 'myScript' ), '1.0.0' );
 		}
 	endif;
+
+  add_action( 'admin_enqueue_scripts', 'load_admin_style' );
 	add_action('wp_enqueue_scripts', 'my_custom_scripts');
 
 /*
@@ -1008,3 +1014,13 @@ function user_search_form(){
 		}
 	endif;
 	add_action('wp_enqueue_scripts', 'my_custom_style');
+
+  // Custom admin JS
+  function custom_admin_js() {
+    $url = get_bloginfo('template_directory') . '/js/wp-admin.js';
+    echo '<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">';
+    echo '<script type="text/javascript" src="//code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>';
+    echo '<script type="text/javascript" src="' . $url .'"></script>';
+    echo '<script type="text/javascript" src="' . site_url() .'/wp-content/themes/the-newswire/library/js/moment.js"></script>';
+  }
+add_action('admin_footer', 'custom_admin_js');
